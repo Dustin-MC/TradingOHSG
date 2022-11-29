@@ -49,6 +49,7 @@ body{
 }
 
 .footer{
+  position: static;
   bottom: 0;
   height: var(--footerHeight);
   justify-content: center;
@@ -58,9 +59,8 @@ body{
 
 .main{
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--footerHeight));
   padding-top: var(--headerHeight);
-  padding-bottom: var(--footerHeight);
 }
 
 
