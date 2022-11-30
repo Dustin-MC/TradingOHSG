@@ -98,9 +98,11 @@ body{
 }
 
 .btn{
-  padding: .4em;
+  padding: .8em;
+  cursor: pointer;
   background-color: var(--mainColor);
   color: var(--secondColor);
+  border: none;
   border-radius: .2em;
   -webkit-border-radius: .2rem;
   -moz-border-radius: .2rem;
@@ -117,17 +119,45 @@ body{
 }
 
 
+.cardsContainer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
 
-
+.card{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  min-width: 300px;
+  max-width: 30%;
+  text-align: center;
+  background-color: var(--secondColor);
+  color: var(--mainColor);
+  outline: 2px solid var(--secondColor);
+  border-radius: 1rem;
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  -ms-border-radius: 1rem;
+  -o-border-radius: 1rem;
+  overflow: hidden;
+}
+.card__aside{
+  display: flex;
+  justify-content: center;
+  padding: .4rem;
+  background: linear-gradient(var(--color1), var(--color2));
+}
+.card__footer{
+  margin-top: auto;
+}
+.btn--card{
+  margin-bottom: 1rem;
+  min-width: 33%;
+}
 
 
 /* Responsive LowResolution */
-.navToggler{
-  border: none;
-  background-color: var(--mainColor);
-  color: var(--secondColor);
-}
-
 .nav__body{
   position: fixed;
   right: 0;
