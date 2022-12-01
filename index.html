@@ -106,7 +106,7 @@
               </h3>
             </header>
             <p class="card__text">
-              Import and export your trading order history data and customize the site theme the way you prefer
+              Import and export your trading order history data and customize the site theme with the custom values that you  prefer
             </p>
             <footer class="card__footer">
               <button class="btn btn--dark btn--card btn--section">
@@ -175,10 +175,11 @@
       <div class="section__ly section__ly1">
         <h2 class="section__title">Manage your data and customize the site theme</h2>
         <h3 class="section__subTitle">Settings</h3>
-        <p>Import and export your trading order history data and customize the site theme the way you prefer</p>
+        <p>Import and export your trading order history data and customize the site theme with the custom values that you  prefer</p>
       </div>
 
       <div class="section__ly section__ly2">
+        <!-- Theme mode -->
         <div class="container">
           <header class="container__header">Select theme mode</header>
           <div class="container__body">
@@ -224,6 +225,32 @@
             </div>
           </div>
         </div>
+
+        <!-- Order history data -->
+        <div class="container">
+          <header class="container__header">Order history data manager</header>
+          <div class="container__body">
+            <!-- Import -->
+            <div class="subContainer">
+              <div class="subContainer__header">Import data</div>
+              <div class="subContainer__body">
+                <p class="text--ib">
+                  Select your order history file and import all your trading data
+                </p>
+                <p>
+                  Get an manual order history manager and get the statistical graphs of the complete analysis of all your operations (analyzed fully automatically)
+                </p>
+                <label for="excelFile" class="btn btn--dark excelInput__label">Select File</label>
+                <input type="file" id="excelFile" class="excelInput">
+              </div>
+            </div>
+
+            <!-- Export -->
+            <div class="subContainer">
+              <div class="subContainer__header">Export data</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     
@@ -249,6 +276,7 @@
   </footer>
 
   <script src="Scripts/scripts.min.js"></script>
+  <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
 </body>
 
 </html>

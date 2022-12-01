@@ -71,9 +71,6 @@
   $defaultColors= getComputedStyle($root),
   $themeBtns= document.querySelectorAll(".btn--theme");
   
-  console.log($colors)
-  console.log($themeBtns)
-
   function TemporalThemeMode(){
     $themeBtns[3].disabled= true;
 
@@ -131,4 +128,20 @@
   $themeBtns[1].onclick= function(){ChangeThemeMode(true)}
   $themeBtns[2].onclick= function(){ChangeThemeMode(false)}
   $themeBtns[3].onclick= function(){TemporalThemeMode()}
+}
+
+
+/* Excel data scope */{
+  let $input= document.querySelector(".excelInput");
+
+  $input.addEventListener("change", async function(){
+    try {
+      const excelFile= await readXlsxFile($input.files[0]);
+      excelFile.forEach(row => {
+        console.log(row);
+      });
+    } catch{
+      alert("Unvalid file! \n\tAction not completed.")
+    }
+  })
 }
