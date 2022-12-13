@@ -175,13 +175,22 @@ p{
 
 
 .container, .subContainer{
-  margin: 0 .4rem 1rem;
+  width: 90%;
+  margin: 0 auto 1rem;
+  min-width: 320px;
   border: 2px solid var(--secondColor);
+  border-radius: .8rem;
+  -webkit-border-radius: .8rem;
+  -moz-border-radius: .8rem;
+  -ms-border-radius: .8rem;
+  -o-border-radius: .8rem;
+  overflow: hidden;
+}
+.container{
+  box-shadow: .2rem .2rem .4rem var(--secondColor);
 }
 .subContainer{
-  width: 90%;
   min-width: 300px;
-  margin: 0 auto 1rem;
   border: 2px dashed var(--secondColor);
 }
 .container__header, .subContainer__header{
@@ -224,9 +233,6 @@ p{
 }
 
 
-.excelInput{
-  display: none;
-}
 .excelInput__label{
   display: inline-block;
   text-align: center;

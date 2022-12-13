@@ -165,7 +165,6 @@
       </div>
 
       <div class="section__ly section__ly2">
-        
       </div>
     </section>
     
@@ -233,6 +232,7 @@
             <!-- Import -->
             <div class="subContainer">
               <div class="subContainer__header">Import data</div>
+
               <div class="subContainer__body">
                 <p class="text--ib">
                   Select your order history file and import all your trading data
@@ -241,15 +241,37 @@
                   Get an manual order history manager and get the statistical graphs of the complete analysis of all your operations (analyzed fully automatically)
                 </p>
               </div>
+
               <footer class="subContainer__footer">
-                <input type="file" id="excelFile" class="excelInput">
+                <input type="file" id="excelFile" class="display--n excelInput">
                 <label for="excelFile" class="btn btn--dark excelInput__label">Select File</label>
+                
+                <select name="dataFormat" class="dataFormat btn btn--dark">
+                  <option value ="none">Select Format</option>
+                  <option value ="bingx">Bing X</option>
+                  <option value ="tohsg">TOHSG</option>
+                </select>                   
               </footer>
             </div>
 
             <!-- Export -->
             <div class="subContainer">
               <div class="subContainer__header">Export data</div>
+
+              <div class="subContainer__body">
+                <p>Generate a backup file with the data that you want to save.</p>
+                
+                <p>Choose what data you want to export, between the site theme with all your custom values or your order history data</p>
+              </div>
+
+              <footer class="subContainer__footer">
+                <button class="btn btn--dark btn--exportData">Export data</button>
+                <select name="dataFormat" class="dataExport btn btn--dark">
+                  <option value ="none">Select data</option>
+                  <option value ="theme">Theme mode</option>
+                  <option value ="tohsg">Order history</option>
+                </select> 
+              </footer>
             </div>
           </div>
         </div>
@@ -279,6 +301,9 @@
 
   <script src="Scripts/scripts.min.js"></script>
   <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
+  
+  
+  
 </body>
 
 </html>

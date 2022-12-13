@@ -1,6 +1,42 @@
-/* Nav Scope */{
-  var hideMenu= true;
+/* Global */{
+  var orderHistory= null,
+  currentSection= 0,
+  hideMenu= true
 
+  // Getting persisted data
+  document.addEventListener("DOMContentLoaded", ()=>{
+    // theme mode
+    if(localStorage.getItem("theme")== null) localStorage.setItem("theme", "2")
+    else if(localStorage.getItem("theme")==0) ChangeThemeMode(0, false)
+    else ChangeThemeMode(localStorage.getItem("theme"))
+    
+
+    // order history
+    if(localStorage.getItem("orderH")!= null){
+      orderHistory= []
+
+      JSON.parse(localStorage.getItem("orderH")).forEach(operation=>{
+        orderHistory.push(operation)
+      })
+      
+      // TODO create and uncomment function
+        // GenerateChartsData()
+    }
+  })
+
+  window.onload = function(){
+    if(localStorage.getItem("themeColors")!=null){
+      let customColors= (localStorage.getItem("themeColors")).split(","),
+      $colors= document.querySelectorAll(".customColor")
+
+      for (let i= 0; i < $colors.length; i++) {
+        $colors[i].value= customColors[i]
+      }
+    }
+  };
+}
+
+/* Nav Scope */{
   function HideMenu(ask){
     if(ask){
       document.querySelector(".nav__body").classList.add("display--n");
@@ -17,7 +53,6 @@
 
 
 /* Sections scope */{
-  var currentSection= 0;
   let $sections= document.querySelectorAll(".section"),
   $navItems= document.querySelectorAll(".nav__item"),
   $sectionCards= document.querySelectorAll(".btn--section");
@@ -70,24 +105,7 @@
   $colors= document.querySelectorAll(".customColor"),
   $defaultColors= getComputedStyle($root),
   $themeBtns= document.querySelectorAll(".btn--theme");
-
-  
-  
-  document.addEventListener("DOMContentLoaded", (e)=>{
-    if(localStorage.getItem("theme")== null){
-      localStorage.setItem("theme", "2")
-    }
-
-    else if(localStorage.getItem("theme")==0){
-      ChangeThemeMode(0, false)
-    }
-    else if(localStorage.getItem("theme")==1){
-      ChangeThemeMode(1)
-    }
-    else{
-      ChangeThemeMode(2)
-    }
-  })
+ 
   
   function TemporalThemeMode(){
     $themeBtns[3].disabled= true;
@@ -118,7 +136,7 @@
     }, 4000);
   }
 
-  function ChangeThemeMode(themeMode, isManualTheme= true){
+  function ChangeThemeMode(themeMode, isManualTheme= true, isImportedColor= false){
     //CustomMode= 0, DarkMode= 1, LightMode=2
     localStorage.setItem("theme", themeMode)
 
@@ -136,6 +154,13 @@
       
       else{
         let customColors= (localStorage.getItem("themeColors")).split(",")
+        
+
+        if(isImportedColor){
+          for (let i= 0; i < $colors.length; i++) {
+            $colors[i].value= customColors[i]
+          }
+        }
 
         $root.style.setProperty("--mainColor", customColors[0]);
         $root.style.setProperty("--secondColor", customColors[1]);
@@ -158,15 +183,7 @@
     }
   }
 
-  window.onload = function(){
-    if(localStorage.getItem("themeColors")!=null){
-      let customColors= (localStorage.getItem("themeColors")).split(",")
-
-      for (let i= 0; i < $colors.length; i++) {
-        $colors[i].value= customColors[i]
-      }
-    }
-  };
+  
 
   $themeBtns[0].onclick= function(){ChangeThemeMode(0)}
   $themeBtns[1].onclick= function(){ChangeThemeMode(1)}
@@ -176,34 +193,100 @@
 
 
 /* Order history data manager */{
-  let $input= document.querySelector(".excelInput");
-  var orderHistory=[];
+  let $excelInput= document.querySelector(".excelInput"),
+  $format= document.querySelector(".dataFormat")
+  $exportBtn= document.querySelector(".btn--exportData"),
+  $dataExport= document.querySelector(".dataExport");
 
-  function GetOrderHistoryData(excelData){
-    for(let i=2; i<excelData.length; i++){
-      let operation=[
-        /* Adapted only for BingX order history file */
-        excelData[i][2], /* category */
-        excelData[i][3], /* marginType */
-        excelData[i][4], /* margin */
-        excelData[i][5], /* leverage */
-        excelData[i][6], /* openPrice */
-        excelData[i][7], /* closePrice */
-        excelData[i][8], /* direction */
-        ConvertToUTC(excelData[i][12]), //open time
-        ConvertToUTC(excelData[i][13]), //close time
-        excelData[i][14], /* fundingFee */
-        excelData[i][15], /* fees */
-        excelData[i][16] /* Realized PNL */
-      ];
 
-      orderHistory.push(operation);
+  async function ImportData(){
+    let importedData= []
+
+    try {
+      if (orderHistory== null) orderHistory= []
+      
+      /* BingX order history file */
+      if($format.value== "bingx"){
+        let fileData= await readXlsxFile($excelInput.files[0]);
+
+        for(let i=2; i<fileData.length; i++){
+          let operation=[
+            fileData[i][2], /* category */
+            fileData[i][3], /* marginType */
+            fileData[i][4], /* margin */
+            fileData[i][5], /* leverage */
+            fileData[i][6], /* openPrice */
+            fileData[i][7], /* closePrice */
+            fileData[i][8], /* direction */
+            ConvertToUTC(fileData[i][12]), //open time
+            ConvertToUTC(fileData[i][13]), //close time
+            fileData[i][14], /* fundingFee */
+            fileData[i][15], /* fees */
+            fileData[i][16] /* Realized PNL */
+          ];
+          
+          importedData.push(JSON.stringify(operation))
+        }
+
+        AddNewOperations(importedData)
+      }
+      
+      /* TradingOHSG file */
+      else if($format.value== "tohsg"){
+        let fileData = $excelInput.files[0],
+        
+        fileReader = new FileReader();
+        fileReader.readAsText(fileData); 
+        
+        fileReader.onload = function() {
+          try {
+            if(fileData["name"].includes("theme")){
+              localStorage.setItem("themeColors", fileReader.result);
+              ChangeThemeMode(0, false, true)
+            }
+  
+            else{
+              JSON.parse(fileReader.result).forEach(operation => {
+                importedData.push(JSON.stringify(operation))
+              });
+  
+              AddNewOperations(importedData)
+            }
+          }
+          catch{
+            alert("Action not completed! \n\tTry again or Select another file.")
+          }
+        };
+      }
     }
     
-    console.log("Final array:")
-    orderHistory.forEach(element=>{
-      console.log(element)
+    catch{
+      alert("Action not completed! \n\tTry again or Select another file.")
+    }
+  }
+
+  function AddNewOperations(importedData){
+    let tempOH=[]
+
+    /* Adding not repeated operations to OrderHistory */
+    orderHistory.forEach(operation => {
+      tempOH.push(JSON.stringify(operation))  
     });
+    
+    importedData.forEach(operation =>{
+      if(!(tempOH.includes(operation))){
+        tempOH.push(operation)
+        orderHistory.push(JSON.parse(operation))
+      }
+    })
+
+    // Persisting data
+    localStorage.setItem("orderH", JSON.stringify(orderHistory))
+
+    // TODO create and uncomment function
+      // GenerateChartsData()
+    
+    alert("Action success!\n\tOrder history data imported")
   }
 
   function ConvertToUTC(timeString, isToUTC0=true){
@@ -229,16 +312,66 @@
     return finalDate
   }
 
+  function ExportData(){
+    let content, fileName, date, exportFile= false
 
+    if($dataExport.value=="theme"){
+      if(localStorage.getItem("theme")== 0){
+        exportFile= true
+        fileName= "themeMode"
+        content= localStorage.getItem("themeColors")
+      }
+      else{
+        alert("Action bloqued!\n\tThere is currently no custom theme selected.")
+      }
+    }
+    
+    else if($dataExport.value=="tohsg"){
+      console.log("orderHistory: ",orderHistory)
+      if(orderHistory!=null){
+        fileName= "data"
+        exportFile= true
+        content= JSON.stringify(orderHistory)
+      }
+      else{
+        alert("Action blocked!\n\tThere is currently no existing data to export.")
+      }
+    }
+    
+    if(exportFile){
+      date= new Date()
+      date= `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()}`
 
+      let link= document.createElement("a"),
+      /* content= customValue, */
+      blob= new Blob([content],{type: "octect/stream"}),
+      url= window.URL.createObjectURL(blob);
+  
+      link.href= url
+      // link.download= `TOHSG_${uid}.${fileName}_${date}.txt`
+      link.download= `TOHSG_${fileName}_${date}.txt`
+      link.click()
+      window.URL.revokeObjectURL(url);
+    }
+  }
+  
+  
+  $excelInput.addEventListener("change", function(){
+    if($format.value!="none") ImportData()
+    
+    else{
+      alert("No format selected!\n\tA format is required to perform data import.")
+    }
+    
+    this.value= ""
+  })
 
-
-  $input.addEventListener("change", async function(){
-    try {
-      const excelFile= await readXlsxFile($input.files[0]);
-      GetOrderHistoryData(excelFile)
-    } catch{
-      alert("Action not completed! \n\tTry again or Select other one.")
+  $exportBtn.addEventListener("click", function(){
+    if($dataExport.value!="none"){
+      ExportData()
+    }
+    else{
+      alert("Action bloqued!\n\tSelect some data to export.")
     }
   })
 }
