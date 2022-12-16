@@ -9,8 +9,6 @@
   --themeColor4: #C00000;
   --themeColor5: #c0c0c0;
 
-
-
   --mainColor: var(--themeColor1);
   --secondColor: var(--themeColor2);
   --color1: var(--themeColor3);
@@ -35,6 +33,7 @@ body, .header, .footer{
 }
 
 body{
+  font-size: 16px;
   background-color: var(--mainColor);
   color: var(--secondColor);
 }
@@ -113,6 +112,7 @@ p{
 .logo__text{
   margin: 0;
   font-size: 1.75rem;
+  white-space: nowrap;
 }
 
 .btn{
@@ -230,6 +230,11 @@ p{
 .customColor{
   box-shadow: .1em .1em .1em var(--secondColor);
   border: none;
+}
+
+.chart{
+  min-width: 100%;
+  height: auto !important;
 }
 
 

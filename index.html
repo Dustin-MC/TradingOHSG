@@ -163,8 +163,17 @@
         <h3 class="section__subTitle">Logbook</h3>
         <p>Get an order history manager for your trading operations and get an automatic statistical analysis by the graphical logbook conversor</p>
       </div>
-
+      
       <div class="section__ly section__ly2">
+        <!-- chart Profits evolution -->
+        <div class="container">
+          <header class="container__header">Profits evolution</header>
+          <div class="container__body">
+            <div class="chartContainer">
+              <canvas data-type="line" class="chart"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     
@@ -301,9 +310,6 @@
 
   <script src="Scripts/scripts.min.js"></script>
   <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
-  
-  
-  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
-
 </html>
