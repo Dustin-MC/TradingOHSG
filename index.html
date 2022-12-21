@@ -41,7 +41,7 @@
 
   <main class="main">
     <!-- Section Home -->
-    <section class="section display--f">
+    <section class="section display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Order History Manager and Logbook Statistical Graphics Converter</h2>
       </div>
@@ -157,7 +157,7 @@
     
 
     <!-- Section Logbook -->
-    <section class="section display--f display--n">
+    <section class="section display--f display--na">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Order history and stadistical graphs</h2>
         <h3 class="section__subTitle">Logbook</h3>
@@ -165,19 +165,127 @@
       </div>
       
       <div class="section__ly section__ly2">
-        <!-- chart Profits evolution -->
+        <!-- chart operations profits evolution -->
         <div class="container">
-          <header class="container__header">Profits evolution</header>
+          <header class="container__header">Operations profits evolution ($)</header>
           <div class="container__body">
+            <p>Evolution of total profits over time, based on the results obtained from each completed operation</p>
             <div class="chartContainer">
-              <canvas data-type="line" class="chart"></canvas>
+              <canvas data-type="line" data-name="profitsEvolution" class="chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- chart operations average stats -->
+        <div class="container">
+          <header class="container__header">Operations average stats</header>
+
+          <div class="container__body">
+            <div class="chartsContainer">
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Efectivity average (%)</header>
+                <div class="subContainer__body">
+                  <p>Average efficiency obtained from all operations carried out</p>
+                  <div class="chartContainer">
+                    <canvas data-type="circle" data-name="efectivity" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Profits average ($)</header>
+                <div class="subContainer__body">
+                  <div class="chartContainer">
+                    <p>Average profits and losses obtained from all the operations carried out</p>
+                    <canvas data-type="circle" data-name="profitAverage" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- chart operations directional stats -->
+        <div class="container">
+          <header class="container__header">Directional average stats</header>
+
+          <div class="container__body">
+            <div class="chartsContainer">
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Directional average (%)</header>
+                <div class="subContainer__body">
+                  <div class="chartContainer">
+                    <p>Directional operativity average obtained from all the operations carried out</p>
+                    <canvas data-type="bar" data-name="directionalAverage" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Profits average ($)</header>
+                <div class="subContainer__body">
+                  <p>Directional operativity average profits obtained from all the operations carried out</p>
+                  <div class="chartContainer">
+                    <canvas data-type="bar" data-name="directionalProfits" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <!-- Direction stats -->
+        <div class="container">
+          <header class="container__header">Directional stats</header>
+          <div class="container__body">
+            <div class="chartsContainer">
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Longs average (%)</header>
+                <div class="subContainer__body">
+                  <p>Average efficiency obtained from all long operations carried out</p>
+                  <div class="chartContainer">
+                    <canvas data-type="circle" data-name="longsAverage" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Shorts average (%)</header>
+                <div class="subContainer__body">
+                  <div class="chartContainer">
+                    <p>Average efficiency obtained from all short operations carried out</p>
+                    <canvas data-type="circle" data-name="shortsAverage" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Longs average ($)</header>
+                <div class="subContainer__body">
+                  <p>Average profits and losses obtained from all the long direction operations carried out</p>
+                  <div class="chartContainer">
+                    <canvas data-type="bar" data-name="longsAverageProfits" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="subContainer chartsContainer__container">
+                <header class="subContainer__header">Shorts average ($)</header>
+                <div class="subContainer__body">
+                  <div class="chartContainer">
+                    <p>Average profits and losses obtained from all the short direction operations carried out</p>
+                    <canvas data-type="bar" data-name="shortsAverageProfits" class="chart"></canvas>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
     
-
+    
     <!-- Section Settings -->
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">

@@ -1,8 +1,8 @@
 /* Global */{
-  var orderHistory= null,
-  currentSection= 0,
-  hideMenu= true,
-  chartsRef= [];
+  var currentSection= 2,
+  hideMenu= true;
+  chartsRef= [],
+  orderHistory= null,
 
   // Setting persisted themeMode
   document.addEventListener("DOMContentLoaded", ()=>{
@@ -27,13 +27,6 @@
       }
     }
 
-    /* TODO
-    code temporarily added
-    (it will be removed in the next commit) 
-    
-    The code set orderH data (line 35)*/
-    localStorage.setItem("orderH", JSON.stringify([0,-2,0,2,0]))
-    
     // order history && generating charts
     if(localStorage.getItem("orderH")!= null){
       orderHistory= []
@@ -45,6 +38,10 @@
       GenerateChartsData()
     }
   };
+
+  function RoundNumber(number, decimals=2){
+    return Number(number.toFixed(decimals))
+  }
 }
 
 /* Nav Scope */{
@@ -70,6 +67,7 @@
   
 
   function ToggleSection(index){
+    /* Toggle section functionality */
     if(currentSection== index){
       alert("Current section!");
       return;
@@ -207,7 +205,7 @@
 }
 
 
-/* Order history data manager */{
+/* Data manager scope */{
   let $excelInput= document.querySelector(".excelInput"),
   $format= document.querySelector(".dataFormat")
   $exportBtn= document.querySelector(".btn--exportData"),
@@ -230,13 +228,16 @@
             fileData[i][5], /* leverage */
             fileData[i][6], /* openPrice */
             fileData[i][7], /* closePrice */
-            fileData[i][8], /* direction */
-            ConvertToUTC(fileData[i][12]), //open time
-            ConvertToUTC(fileData[i][13]), //close time
+            null, /* direction assigned later with an if */
+            ConvertDate(fileData[i][12]), // open time
+            ConvertDate(fileData[i][13]), // close time
             fileData[i][14], /* fundingFee */
-            fileData[i][15], /* fees */
-            fileData[i][16] /* Realized PNL */
+            // fileData[i][15], /* fees */
+            // fileData[i][16] /* Realized PNL */
           ];
+
+          if(fileData[i][8]=="long") operation[6]= true
+          else operation[6]= false // short
           
           importedData.push(JSON.stringify(operation))
         }
@@ -307,7 +308,7 @@
     alert("Action success!\n\tOrder history data imported")
   }
 
-  function ConvertToUTC(timeString, isToUTC0=true){
+  function ConvertDate(timeString, isToUTC0=true){
     let finalDate
     timeString= timeString.toJSON()
     
@@ -325,8 +326,12 @@
       finalDate= (new Date(Date.UTC(year, month-1, day, hour-(utcDiference), minute, second))).toJSON();
     }
     else{
+      /* TODO
+      else dont used */
       finalDate= (new Date(timeString)).toJSON()
     }
+    
+    finalDate= finalDate.slice(0, -5).replace("T", " ")
     return finalDate
   }
 
@@ -395,19 +400,181 @@
 }
 
 /* Charts Scope */{
-  let $charts= document.querySelectorAll(".chart")
+  let $charts= document.querySelectorAll(".chart"),
+  chartsData= {}
+
 
   function GenerateChartsData(){
-    /* TODO
-    code temporarily removed
-    (it will be added in the next commit)
+    // operation profit evolution
+    let opProfit, opDate, opsProfitsEvolution, 
 
-    The code generate the charts data
-     */
+    // operations average
+    opOnePercent,
+    oHLength= orderHistory.length,
+    tpOps=0, slOps=0, beOps=0,
+    tpProfits=0, slProfits=0, beProfits=0,
 
+    // directional average
+    longOps= 0, shortOps= 0,
+    longOpsProfit= 0, shortOpsProfit= 0,
+
+    // directional
+    tpLongOps= 0, slLongOps= 0, beLongOps= 0,
+    tpLongOpsProfit= 0, slLongOpsProfit= 0, beLongOpsProfit= 0,
+    
+    tpShortOps= 0, slShortOps= 0, beShortOps= 0,
+    tpShortOpsProfit= 0, slShortOpsProfit= 0/* , beShortOpsProfit= 0 */
+
+
+    /* cleaning charts data */
+    chartsData["profitsEvolution"]=[[],[]]
+    chartsData["efectivity"]= [["TP %", "SL %", "BE %"],[]]
+    chartsData["profitAverage"]= [["TP $", "SL $", "BE $"],[]]
+    chartsData["directionalAverage"]= [["Long %","Short %"],[]]
+    chartsData["directionalProfits"]= [["Longs $","Shorts $"], []]
+    chartsData["longsAverage"]= [["TP %", "SL %", "BE %"],[]]
+    chartsData["shortsAverage"]= [["TP %", "SL %", "BE %"],[]]
+    chartsData["longsAverageProfits"]= [["TP $", "SL $", "BE $"],[]]
+    chartsData["shortsAverageProfits"]= [["TP $", "SL $"],[]]
+
+
+    /* Data generation */
+    orderHistory.forEach((op, index)=>{
+      /* Operations profits evolution */{
+        
+        // xProfit= profit multiplier decimal value
+        let xProfit= (op[5]/op[4]) -1
+        
+        // Multipliler for short operation
+        if(op[6]!= true) xProfit*= -1
+
+        
+        opProfit= RoundNumber(xProfit*(op[2]*op[3]))
+
+        opDate= new Date(op[7]+"z")
+        opDate= `${opDate.getMonth()+1}.${opDate.getDate()}`
+
+        // New acumulated profit
+        opsProfitsEvolution= opProfit
+        if(index!=0){
+          opsProfitsEvolution+= chartsData["profitsEvolution"][1][chartsData["profitsEvolution"][1].length -1]
+        }
+
+        /* setting chart data  */
+        chartsData["profitsEvolution"][0].push(opDate)
+        chartsData["profitsEvolution"][1].push(opsProfitsEvolution)
+      }
+      
+
+      /* Operations efectivity average */{
+        opOnePercent= (op[2]*op[3])/100
+         
+        if(opProfit> opOnePercent) tpOps++
+        else if(opProfit< 0) slOps++
+        else beOps++
+        
+        if(index+1== oHLength){
+          chartsData["efectivity"][1].push(RoundNumber((tpOps*100)/oHLength))
+          
+          chartsData["efectivity"][1].push(RoundNumber((slOps*100)/oHLength))
+          
+          chartsData["efectivity"][1].push(RoundNumber((beOps*100)/oHLength))
+        }
+      }
+      
+      /* Operations profits average */{
+        if(opProfit> opOnePercent) tpProfits+= opProfit
+        else if(opProfit< 0) slProfits+= opProfit
+        else beProfits+= opProfit
+        
+        if(index+1== oHLength){
+          chartsData["profitAverage"][1].push(RoundNumber(tpProfits/tpOps))
+          chartsData["profitAverage"][1].push(RoundNumber(slProfits/slOps))
+          chartsData["profitAverage"][1].push(RoundNumber(beProfits/beOps))
+        }
+      }
+
+      /* Directional average stats */{
+        if(op[6]){
+          longOps++
+          longOpsProfit+= opProfit
+        }
+
+        else{
+          shortOps++
+          shortOpsProfit+= opProfit
+        }
+
+        /* setting chart data */
+        if(index+1== oHLength){
+          chartsData["directionalAverage"][1].push(RoundNumber((longOps/oHLength)*100))
+          chartsData["directionalAverage"][1].push(RoundNumber((shortOps/oHLength)*100))
+
+
+          chartsData["directionalProfits"][1].push(RoundNumber(longOpsProfit/longOps))
+          chartsData["directionalProfits"][1].push(RoundNumber(shortOpsProfit/shortOps))
+        }
+      }
+
+      /* Longs && shorts average stats */{
+        if(op[6]){
+          if(opProfit> opOnePercent){
+            tpLongOps++
+            tpLongOpsProfit+= opProfit
+          }
+          else if(opProfit<0){
+            slLongOps++
+            slLongOpsProfit+= opProfit
+          }
+          else{
+            beLongOps++
+            beLongOpsProfit+= opProfit
+          }
+        }
+        
+        else{
+          if(opProfit> opOnePercent){
+            tpShortOps++
+            tpShortOpsProfit+= opProfit
+          }
+          else if(opProfit<0){
+            slShortOps++
+            slShortOpsProfit+= opProfit
+          }
+          else{
+            beShortOps++
+            // beShortOpsProfit+= opProfit
+          }
+        }
+
+        /* setting chart data */
+        if(index+1== oHLength){
+          /* % */
+          chartsData["longsAverage"][1].push(RoundNumber((tpLongOps/longOps)*100))
+          chartsData["longsAverage"][1].push(RoundNumber((slLongOps/longOps)*100))
+          chartsData["longsAverage"][1].push(RoundNumber((beLongOps/longOps)*100))
+          
+
+          chartsData["shortsAverage"][1].push(RoundNumber((tpShortOps/shortOps)*100))
+          chartsData["shortsAverage"][1].push(RoundNumber((slShortOps/shortOps)*100))
+          chartsData["shortsAverage"][1].push(RoundNumber((beShortOps/shortOps)*100))
+          
+          
+          /* $ */
+          chartsData["longsAverageProfits"][1].push(RoundNumber(tpLongOpsProfit/tpLongOps))
+          chartsData["longsAverageProfits"][1].push(RoundNumber(slLongOpsProfit/slLongOps))
+          chartsData["longsAverageProfits"][1].push(RoundNumber(beLongOpsProfit/beLongOps))
+          
+          
+          chartsData["shortsAverageProfits"][1].push(RoundNumber(tpShortOpsProfit/tpShortOps))
+          chartsData["shortsAverageProfits"][1].push(RoundNumber(slShortOpsProfit/slShortOps))
+          // chartsData["shortsAverageProfits"][1].push(RoundNumber(beShortOpsProfit/beShortOps))
+        }
+      }
+    })
+    
     GenerateCharts()
   }
-
 
   function GenerateCharts(){
     let $colors= []
@@ -427,36 +594,197 @@
       $colors.shift()
     }
 
-    /* TODO
-    code temporarily removed
-    (it will be added in the next commit)
+    /* Generating charts */
+    $charts.forEach(($chart, i)=>{
+      let name= $chart.dataset.name,
+      data= chartsData[name]
 
-    The code generate/update the charts
-     */
+      if(chartsRef[i]!=undefined) chartsRef[i].destroy()
 
+      if($chart.dataset.type=="line"){
+        chartsRef[i]= new Chart($chart, {
+          type: 'line',
+          
+          data: {
+            labels: data[0], 
+            datasets: [{
+              // label: 'Dataset sample label',
+              data: data[1],
+              
+              pointBackgroundColor: $colors[0],
+              
+              borderColor: $colors[0],
+              fill: {
+                target: 'origin',
+                above: $colors[1],
+                below: $colors[2]
+              },
+            }]
+          },
 
+          options: {
+            scales: {
+              
+              x: {
+                grid: {
+                  display: false,
+                },
+                ticks:{
+                  color: $colors[0],
+                }
+              },
 
-    /* chart sample */{
-      if(chartsRef[0]!=undefined) chartsRef[0].destroy()
-  
-      chartsRef[0]= new Chart($charts[0], {
-        type: 'line',
-  
-        data: {
-          labels: [1,2,3,4,5], 
-          datasets: [{
-            label: 'Dataset sample label',
-            data: orderHistory,
-  
-            borderColor: $colors[0],
-            fill: {
-              target: 'origin',
-              above: $colors[1],
-              below: $colors[2]
+              y: {
+                grid:{
+                  color: $colors[0],
+                },
+                ticks:{
+                  color: $colors[0],
+                }
+              },
             },
-          }]
-        },
-      });
-    }
+            
+            plugins:{
+              legend: {
+                display: false,
+                // labels:{
+                //   color: $colors[0],
+                // }
+              },
+            }
+          },
+        });
+      }
+      
+      else if($chart.dataset.type=="circle"){
+        chartsRef[i]= new Chart($chart, {
+          type: 'doughnut',
+          
+          data: {
+            labels: data[0],
+            
+            datasets: [{
+              
+              // label: '%',
+              data: data[1],
+              
+              hoverOffset: 4,
+              borderWidth: 2,
+              borderColor: $colors[0],
+              
+              backgroundColor:[
+                $colors[1],
+                $colors[2],
+                $colors[0],
+              ]
+            }]
+          },
+          
+          options: {
+            layout:{
+              padding: 4,
+            },
+
+            plugins:{
+              legend: {
+                display: false
+              },
+            }
+          },
+        });
+      }
+      
+      else if($chart.dataset.type=="semiCircle"){
+        chartsRef[i]= new Chart($chart, {
+          type: 'doughnut',
+          
+          data: {
+            labels: data[0],
+            
+            datasets: [{
+              
+              // label: '%',
+              data: data[1],
+              circumference: 180,
+              rotation: -90,
+              
+              hoverOffset: 4,
+              borderWidth: 2,
+              borderColor: $colors[0],
+              
+              backgroundColor:[
+                $colors[1],
+                $colors[2],
+                $colors[0],
+              ]
+            }]
+          },
+          
+          options: {
+            layout:{
+              padding: 4,
+            },
+
+            plugins:{
+              legend: {
+                display: false
+              },
+            }
+          },
+        });
+      }
+
+      else if($chart.dataset.type=="bar"){
+        chartsRef[i]= new Chart($chart, {
+          type: 'bar',
+          
+          data: {
+            labels: data[0], 
+            datasets: [{
+              // axis: "y",
+              // label: 'Dataset sample label',
+              data: data[1],
+
+              borderWidth: 2,
+              borderColor: $colors[0],
+              backgroundColor:[
+                $colors[1],
+                $colors[2],
+                $colors[0],
+              ]
+            }]
+          },
+
+          options: {
+            // indexAxis: "y",
+            
+            scales: {
+              y: {
+                grid:{
+                  color: $colors[0]
+                },
+                ticks:{
+                  color: $colors[0],
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                },
+                ticks:{
+                  color: $colors[0],
+                }
+              }
+            },
+   
+            plugins:{
+              legend: {
+                display: false
+              },
+            }
+          },
+        });
+      }
+    })
   }
 }

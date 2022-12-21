@@ -190,10 +190,13 @@ p{
   box-shadow: .2rem .2rem .4rem var(--secondColor);
 }
 .subContainer{
+  display: flex;
+  flex-direction: column;
   min-width: 300px;
   border: 2px dashed var(--secondColor);
 }
 .container__header, .subContainer__header{
+  width: 100%;
   padding: .5rem;
   margin-bottom: .5rem;
   font-size: 1.5rem;
@@ -201,6 +204,7 @@ p{
   color: var(--mainColor);
 }
 .subContainer__body{
+  margin-top: auto;
   display: flex;
   flex-direction: column;
 }
@@ -232,8 +236,22 @@ p{
   border: none;
 }
 
+
+.chartsContainer{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.chartsContainer__container{
+  width: 45%;
+  margin: .2rem .2rem 1rem;
+  min-width: 200px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  max-width: 90%;
+}
 .chart{
-  min-width: 100%;
+  width: 100% !important;
   height: auto !important;
 }
 
