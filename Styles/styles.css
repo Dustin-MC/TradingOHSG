@@ -206,6 +206,11 @@ p{
   min-width: 300px;
   border: 2px dashed var(--secondColor);
 }
+.subContainer--dark{
+  color: var(--mainColor);
+  background-color: var(--secondColor);
+  border-color: var(--color2);
+}
 .container__header, .subContainer__header{
   width: 100%;
   padding: .5rem;
@@ -213,6 +218,9 @@ p{
   font-size: 1.5rem;
   background-color: var(--secondColor);
   color: var(--mainColor);
+}
+.subContainer__header--color2{
+  background-color: var(--color2);
 }
 .subContainer__body{
   margin-top: auto;

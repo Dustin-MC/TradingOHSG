@@ -540,6 +540,24 @@
   /* Operation container action buttons */
   $opDataBtns[0].onclick= ()=> SaveOperationData()
   $opDataBtns[1].onclick= ()=> ClearOpInputs()
+
+  /* Delete data */
+  document.querySelector(".btn--deleteData").onclick= ()=>{
+    if(localStorage.getItem("orderH")!=null){
+      if(confirm("DATA DELETION!\n\tAre you sure to want to proceed with the action?")){
+        orderHistory= null
+        localStorage.removeItem("orderH")
+        localStorage.removeItem("tempOp")
+
+        chartsRef.forEach(chart=>{
+          if(chart!=undefined) chart.destroy()
+        })
+  
+        alert("Action success!\n\tAll information has been completely removed")
+      }
+    }
+    else alert("Action not completed!\n\tNo existing data to delete")
+  }
 }
 
 /* Charts Scope */{
