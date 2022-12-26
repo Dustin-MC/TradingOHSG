@@ -1,5 +1,5 @@
 /* Global */{
-  var currentSection= 2,
+  var currentSection= 0,
   hideMenu= true;
   chartsRef= [],
   orderHistory= null,
@@ -67,6 +67,11 @@
   
 
   function ToggleSection(index){
+    /* If operation data container is showed hide it */
+    let $opDataContainer= document.querySelector(".newOpContainer").classList
+    if(!$opDataContainer.contains("display--n")) $opDataContainer.toggle("display--n")
+
+
     /* Toggle section functionality */
     if(currentSection== index){
       alert("Current section!");
@@ -108,6 +113,7 @@
 
 /* Responsive scope */{
 }
+
 
 /* Theme mode scope */{
   let $root= document.querySelector(":root"),
@@ -206,40 +212,132 @@
 
 
 /* Data manager scope */{
-  let $excelInput= document.querySelector(".excelInput"),
+  let $importFile= document.querySelector(".excelInput"),
   $format= document.querySelector(".dataFormat")
   $exportBtn= document.querySelector(".btn--exportData"),
-  $dataExport= document.querySelector(".dataExport");
+  $dataExport= document.querySelector(".dataExport"),
+  $newOpBtns= document.querySelectorAll(".btn--newContainer"),
+  $opDataBtns= document.querySelectorAll(".btn--opData");
 
+
+  function SaveOperationData(){
+    let opData= [], formatedOp=[],
+    addOperation= true,
+    $newOpItems= document.querySelectorAll(".newOp__item"),
+    $pnlType= document.querySelector(".newOp__item--pnl")
+
+    // Temporal operation data
+    $newOpItems.forEach((e,i) =>{
+      if(e.value!=""){
+        if(i!=6){ // not date input
+          if(i!=7){ // not time input
+            // $PnL or $PnL
+            if(i==5){
+              if($pnlType.value=="%") opData[i]= RoundNumber(Number(e.value)/100)
+
+              else if($pnlType.value=="$") opData[i]= RoundNumber(Number(e.value) /(opData[2]*opData[3]))
+
+              else{
+                opData[i]= RoundNumber(Number(e.value))
+                addOperation= false
+              }
+            }
+            else if(e.dataset.type=="number") opData[i]= RoundNumber(Number(e.value))
+            else opData[i]= e.value
+          }
+        }
+        
+        else{ // create dateTime value
+          try {
+            let d1, dateString= `${e.value} ${$newOpItems[i+1].value}:00Z`
+            
+            d1= new Date(dateString)
+            d1= new Date(Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours()+(d1.getTimezoneOffset()/60), d1.getMinutes(), 0))
+            
+            d1= d1.toJSON().replace("T"," ").replace(".000Z","")
+            opData[i]= d1
+          }
+          catch{ addOperation= false }
+        }
+      }
+      
+      else addOperation= false
+      // TODO if some browser dont save correctly the tempOp data, add opData[]= null
+    })
+
+    if(opData.includes(null)) addOperation= false
+
+    formatedOp=[
+      opData[0], // category
+      opData[1], // marginType
+      opData[2], // leverage
+      opData[3], // margin
+      opData[4], // direction
+      opData[5], // realized PnL
+      opData[6], // closeDateTime
+      opData[8], // funding fees
+    ]
+    
+    if(formatedOp[4]=="true") formatedOp[4]= true
+    else if(formatedOp[4]=="false") formatedOp[4]= false
+    else formatedOp[4]==null
+
+    if(addOperation){
+      AddNewOperations([JSON.stringify(formatedOp),])
+      localStorage.removeItem("tempOp")
+      ClearOpInputs()
+      document.querySelector(".newOpContainer").classList.toggle("display--n")
+    }
+
+    else{
+      localStorage.setItem("tempOp", JSON.stringify(formatedOp))
+      alert("Data saved!\n\tFill in the missing data to graph the operation")
+    }
+  }
 
   async function ImportData(){
     let importedData= []
-
+    
     try {
       /* BingX order history file */
       if($format.value== "bingx"){
-        let fileData= await readXlsxFile($excelInput.files[0]);
+        /* bingX orderH data order +indexes
+        2 category
+        3 marginType
+        4 margin
+        5 leverage
+        6 openPrice
+        7 closePrice
+        8 direction
+        // ...
+        12 openDateTime
+        13 closeDateTime
+        14 fundingFee
+        // ...
+        16 realized pnl
+        */
 
+        let fileData= await readXlsxFile($importFile.files[0]);
         for(let i=2; i<fileData.length; i++){
-          let operation=[
-            fileData[i][2], /* category */
-            fileData[i][3], /* marginType */
-            fileData[i][4], /* margin */
-            fileData[i][5], /* leverage */
-            fileData[i][6], /* openPrice */
-            fileData[i][7], /* closePrice */
-            null, /* direction assigned later with an if */
-            ConvertDate(fileData[i][12]), // open time
-            ConvertDate(fileData[i][13]), // close time
-            fileData[i][14], /* fundingFee */
-            // fileData[i][15], /* fees */
-            // fileData[i][16] /* Realized PNL */
-          ];
+          // bingX orderH op to TOHSG orderH op
+          let fileOp=[
+            fileData[i][2], // 0 category
+            fileData[i][3], // 1 marginType
+            fileData[i][5], // 2 leverage
+            fileData[i][4], // 3 margin
+            fileData[i][8], // 4 direction
+            fileData[i][16], // 5 realized PnL
+            ConvertDate(fileData[i][13]), // 6
+            fileData[i][14], // 7 fudingFee
+          ]
 
-          if(fileData[i][8]=="long") operation[6]= true
-          else operation[6]= false // short
+          if(fileOp[4]=="long") fileOp[4]= true
+          else fileOp[4]= false
+
+          // $PnL to %PnL
+          fileOp[5]= RoundNumber((fileOp[5]*100)/(fileOp[2]*fileOp[3]))
           
-          importedData.push(JSON.stringify(operation))
+          importedData.push(JSON.stringify(fileOp))
         }
 
         AddNewOperations(importedData)
@@ -247,7 +345,7 @@
       
       /* TradingOHSG file */
       else if($format.value== "tohsg"){
-        let fileData = $excelInput.files[0],
+        let fileData = $importFile.files[0],
         
         fileReader = new FileReader();
         fileReader.readAsText(fileData); 
@@ -286,8 +384,9 @@
   function AddNewOperations(importedData){
     let tempOH=[]
 
+    
     if(orderHistory== null) orderHistory= []
-
+    
     /* Adding not repeated operations to OrderHistory */
     orderHistory.forEach(operation => {
       tempOH.push(JSON.stringify(operation))  
@@ -299,13 +398,14 @@
         orderHistory.push(JSON.parse(operation))
       }
     })
-
+    
     // Persisting data
     localStorage.setItem("orderH", JSON.stringify(orderHistory))
 
+
     GenerateChartsData()
     
-    alert("Action success!\n\tOrder history data imported")
+    alert("Action success!\n\tOperation/s added without errors")
   }
 
   function ConvertDate(timeString, isToUTC0=true){
@@ -345,7 +445,7 @@
         content= localStorage.getItem("themeColors")
       }
       else{
-        alert("Action bloqued!\n\tThere is currently no custom theme selected.")
+        alert("Action not completed!\n\tThere is currently no custom theme selected.")
       }
     }
     
@@ -356,7 +456,7 @@
         content= JSON.stringify(orderHistory)
       }
       else{
-        alert("Action blocked!\n\tThere is currently no existing data to export.")
+        alert("Action not completed!\n\tThere is currently no existing data to export.")
       }
     }
     
@@ -376,9 +476,37 @@
       window.URL.revokeObjectURL(url);
     }
   }
+
+  function ClearOpInputs(){
+    let $inputs= document.querySelectorAll(".newOp__item")
+    
+    $inputs.forEach(e=> {
+      if(!e.disabled) e.value=""
+    })
+  }
+
+  function SetOpInputsData(opData){
+    let $inputs= document.querySelectorAll(".newOp__item")
+    opData= JSON.parse(opData)
+
+    /* setting inputs values */
+    opData.forEach((e,i)=>{
+      if(e!=null){
+        if(i!=7){ // not time imput
+          if(i==6){ //dateTime
+            $inputs[i].value= e.slice(0,10)
+            $inputs[i+1].value= e.slice(11, 16)
+          }
+          else $inputs[i].value= e
+        }
+        else $inputs[i+1].value= e
+      }
+    })
+  }
   
+
   // Import data "button"
-  $excelInput.addEventListener("change", function(){
+  $importFile.addEventListener("change", function(){
     if($format.value!="none") ImportData()
     
     else{
@@ -394,15 +522,29 @@
       ExportData()
     }
     else{
-      alert("Action bloqued!\n\tSelect some data to export.")
+      alert("Action not completed!\n\tSelect some data to export.")
     }
   })
+
+  
+  /* Operation container toggler buttons */
+  $newOpBtns[0].onclick= ()=> {
+    if(localStorage.getItem("tempOp")!= null) SetOpInputsData(localStorage.getItem("tempOp"))
+
+    document.querySelector(".newOpContainer").classList.toggle("display--n")
+  }
+  $newOpBtns[1].onclick= ()=> {
+    document.querySelector(".newOpContainer").classList.toggle("display--n")
+  }
+
+  /* Operation container action buttons */
+  $opDataBtns[0].onclick= ()=> SaveOperationData()
+  $opDataBtns[1].onclick= ()=> ClearOpInputs()
 }
 
 /* Charts Scope */{
   let $charts= document.querySelectorAll(".chart"),
   chartsData= {}
-
 
   function GenerateChartsData(){
     // operation profit evolution
@@ -438,18 +580,11 @@
     chartsData["shortsAverageProfits"]= [["TP $", "SL $"],[]]
 
 
+    
     /* Data generation */
     orderHistory.forEach((op, index)=>{
       /* Operations profits evolution */{
-        
-        // xProfit= profit multiplier decimal value
-        let xProfit= (op[5]/op[4]) -1
-        
-        // Multipliler for short operation
-        if(op[6]!= true) xProfit*= -1
-
-        
-        opProfit= RoundNumber(xProfit*(op[2]*op[3]))
+        opProfit = RoundNumber(op[2] *op[3] *op[5])
 
         opDate= new Date(op[7]+"z")
         opDate= `${opDate.getMonth()+1}.${opDate.getDate()}`
@@ -465,7 +600,6 @@
         chartsData["profitsEvolution"][1].push(opsProfitsEvolution)
       }
       
-
       /* Operations efectivity average */{
         opOnePercent= (op[2]*op[3])/100
          
@@ -495,7 +629,7 @@
       }
 
       /* Directional average stats */{
-        if(op[6]){
+        if(op[4]){ //is long op?
           longOps++
           longOpsProfit+= opProfit
         }
@@ -517,7 +651,7 @@
       }
 
       /* Longs && shorts average stats */{
-        if(op[6]){
+        if(op[4]){ // is long op?
           if(opProfit> opOnePercent){
             tpLongOps++
             tpLongOpsProfit+= opProfit
@@ -554,7 +688,6 @@
           chartsData["longsAverage"][1].push(RoundNumber((slLongOps/longOps)*100))
           chartsData["longsAverage"][1].push(RoundNumber((beLongOps/longOps)*100))
           
-
           chartsData["shortsAverage"][1].push(RoundNumber((tpShortOps/shortOps)*100))
           chartsData["shortsAverage"][1].push(RoundNumber((slShortOps/shortOps)*100))
           chartsData["shortsAverage"][1].push(RoundNumber((beShortOps/shortOps)*100))
@@ -564,7 +697,6 @@
           chartsData["longsAverageProfits"][1].push(RoundNumber(tpLongOpsProfit/tpLongOps))
           chartsData["longsAverageProfits"][1].push(RoundNumber(slLongOpsProfit/slLongOps))
           chartsData["longsAverageProfits"][1].push(RoundNumber(beLongOpsProfit/beLongOps))
-          
           
           chartsData["shortsAverageProfits"][1].push(RoundNumber(tpShortOpsProfit/tpShortOps))
           chartsData["shortsAverageProfits"][1].push(RoundNumber(slShortOpsProfit/slShortOps))

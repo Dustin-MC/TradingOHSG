@@ -132,6 +132,17 @@ p{
   background-color: var(--secondColor);
   color: var(--mainColor);
 }
+.btn--color1{
+  color: var(--mainColor);
+  background-color: var(--color1);
+}
+.btn--color2{
+  color: var(--mainColor);
+  background-color: var(--color2);
+}
+.btn--newContainer{
+  margin-bottom: 1rem;
+}
 
 .section__title, .section__subTitle{
   text-align: center;
@@ -237,6 +248,41 @@ p{
 }
 
 
+.newOpContainer{
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  background-color: var(--mainColor);
+}
+
+.newOpMainContainer{
+  max-width: 360px;
+  overflow-y: auto;
+  margin: auto;
+  border-color: var(--secondColor);
+  background-color: var(--mainColor);
+  box-shadow:
+  .4rem .4rem 1rem var(--color2),
+  -.4rem -.4rem 1rem var(--color1);
+}
+
+.newOpcontainer__container{
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 .4rem 0;
+}
+
+.newOp__item, .newOp__item--pnl{
+  margin: 0 0 .4rem;
+  padding: .4rem;
+}
+
+
 .chartsContainer{
   display: flex;
   justify-content: space-around;
@@ -251,7 +297,10 @@ p{
   max-width: 90%;
 }
 .chart{
-  width: 100% !important;
+  /* width: 100%; */
+  /* width: 100% !important; */
+  min-width: 100%;
+  max-width: 100%;
   height: auto !important;
 }
 
@@ -270,9 +319,10 @@ p{
   top: var(--headerHeight);
   right: 0;
   width: 100%;
+  height: calc(100vh - var(--headerHeight));
   flex-direction: column;
-  max-height: calc(100vh - var(--headerHeight));
   overflow-y: auto;
+  background-color: var(--mainColor);
 }
 
 .nav__item{

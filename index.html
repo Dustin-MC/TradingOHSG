@@ -41,7 +41,7 @@
 
   <main class="main">
     <!-- Section Home -->
-    <section class="section display--n">
+    <section class="section display--f">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Order History Manager and Logbook Statistical Graphics Converter</h2>
       </div>
@@ -157,11 +157,80 @@
     
 
     <!-- Section Logbook -->
-    <section class="section display--f display--na">
+    <section class="section display--f display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Order history and stadistical graphs</h2>
         <h3 class="section__subTitle">Logbook</h3>
         <p>Get an order history manager for your trading operations and get an automatic statistical analysis by the graphical logbook conversor</p>
+
+        <button class="btn btn--color1 btn--newContainer">New operation menu</button>
+
+        <div class="newOpContainer display--f display--n">
+          <div class="container newOpMainContainer">
+            <header class="container__header">Operation data</header>
+            <div class="container__body newOpcontainer__container">
+              <!-- category -->
+              <select name="" class="newOp__item">
+                <option value="">Category</option>
+                <option value="btc">BTC</option>
+              </select>
+
+              <!-- margin type -->
+              <select name="" class="newOp__item">
+                <option value="">Margin type</option>
+                <option value="usdt">USDT</option>
+              </select>
+              
+              <!-- leaverage -->
+              <select name="" data-type="number" class="newOp__item">
+                <option value="">Leaverage</option>
+                <option value="1">x1</option>
+                <option value="5">x5</option>
+                <option value="10">x10</option>
+                <option value="25">x25</option>
+              </select>
+              
+              <!-- margin -->
+              <input type="number" min=0 name="" id="" placeholder="Margin" class="newOp__item" data-type="number">
+              
+              <!-- direction -->
+              <select name="" class="newOp__item">
+                <option value="">Direction</option>
+                <option value="true">long</option>
+                <option value="false">short</option>
+              </select>
+              
+              <!-- PnL -->
+              <input type="number" name="" id="" placeholder="Realized PnL" data-type="number" class="newOp__item">
+              
+              <!-- PnL type -->
+              <select name="" class="newOp__item--pnl">
+                <option value="">PnL type</option>
+                <option value="%">%</option>
+                <option value="$">$</option>
+              </select>
+              
+              <!-- close time -->
+              <div>
+                <p>Close time</p>
+                <input type="date" name="" id="openDate" class="newOp__item">
+                <input type="time" name="" id="openTime" class="newOp__item">
+              </div>
+              
+              <!-- funding fee -->
+              <input type="number" name="" id="" placeholder="Funding fee" data-type="number" class="newOp__item">
+              
+              <!-- fees -->
+              <!-- <input type="number" name="" id="" placeholder="Fees" class="newOp__item"> -->
+            </div>
+
+            <footer class="subContainer__footer">
+              <button class="btn btn--color1 btn--opData">Save data</button>
+              <button class="btn btn--dark btn--opData">Clear data</button>
+              <button class="btn btn--dark btn--newContainer">Close menu</button>
+            </footer>
+          </div>
+        </div>
       </div>
       
       <div class="section__ly section__ly2">
