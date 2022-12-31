@@ -76,7 +76,7 @@ p{
 .main{
   display: flex;
   padding-top: var(--headerHeight);
-  min-height: calc(100vh - var(--footerHeight));
+  min-height: calc(100vh - var(--headerHeight));
 }
 
 .section{
@@ -131,17 +131,6 @@ p{
 .btn--dark{
   background-color: var(--secondColor);
   color: var(--mainColor);
-}
-.btn--color1{
-  color: var(--mainColor);
-  background-color: var(--color1);
-}
-.btn--color2{
-  color: var(--mainColor);
-  background-color: var(--color2);
-}
-.btn--newContainer{
-  margin-bottom: 1rem;
 }
 
 .section__title, .section__subTitle{
@@ -206,11 +195,6 @@ p{
   min-width: 300px;
   border: 2px dashed var(--secondColor);
 }
-.subContainer--dark{
-  color: var(--mainColor);
-  background-color: var(--secondColor);
-  border-color: var(--color2);
-}
 .container__header, .subContainer__header{
   width: 100%;
   padding: .5rem;
@@ -218,9 +202,6 @@ p{
   font-size: 1.5rem;
   background-color: var(--secondColor);
   color: var(--mainColor);
-}
-.subContainer__header--color2{
-  background-color: var(--color2);
 }
 .subContainer__body{
   margin-top: auto;
@@ -232,8 +213,9 @@ p{
   margin-bottom: .5rem;
 }
 
-.containerThemeButtons{
+.containerButtons{
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   margin-bottom: .5rem;
 }
@@ -280,14 +262,23 @@ p{
 }
 
 .newOpcontainer__container{
-  justify-content: space-between;
   flex-wrap: wrap;
   padding: 0 .4rem 0;
 }
 
 .newOp__item, .newOp__item--pnl{
-  margin: 0 0 .4rem;
+  margin: 0 0 .8rem;
   padding: .4rem;
+  border: none;
+  background-color: var(--secondColor);
+  border-radius: .4rem;
+  -webkit-border-radius: .4rem;
+  -moz-border-radius: .4rem;
+  -ms-border-radius: .4rem;
+  -o-border-radius: .4rem;
+}
+.newOp__item::placeholder{
+  color: currentColor;
 }
 
 
@@ -318,10 +309,6 @@ p{
   text-align: center;
 }
 
-
-
-
-/* Responsive LowResolution */
 .nav__body{
   position: fixed;
   top: var(--headerHeight);
@@ -332,7 +319,6 @@ p{
   overflow-y: auto;
   background-color: var(--mainColor);
 }
-
 .nav__item{
   padding: 1rem;
   margin: 0;
@@ -348,4 +334,27 @@ p{
 }
 .language{
   list-style: none;
+}
+
+
+.tableContainer{
+  /* display: flex; */
+  /* justify-content: center; */
+  overflow-x: auto;
+}
+
+.opsTable{
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+.thead{
+  color: var(--mainColor);
+  background-color: var(--secondColor);
+}
+.tr{
+  border-bottom: 1px solid var(--secondColor);
+}
+.th, .td{
+  padding: .4rem .2rem;
 }

@@ -335,7 +335,7 @@
           else fileOp[4]= false
 
           // $PnL to %PnL
-          fileOp[5]= RoundNumber((fileOp[5]*100)/(fileOp[2]*fileOp[3]))
+          fileOp[5]= RoundNumber(fileOp[5]/(fileOp[2]*fileOp[3]))
           
           importedData.push(JSON.stringify(fileOp))
         }
@@ -384,7 +384,6 @@
   function AddNewOperations(importedData){
     let tempOH=[]
 
-    
     if(orderHistory== null) orderHistory= []
     
     /* Adding not repeated operations to OrderHistory */
@@ -483,6 +482,8 @@
     $inputs.forEach(e=> {
       if(!e.disabled) e.value=""
     })
+
+    document.querySelector(".newOp__item--pnl").value= ""
   }
 
   function SetOpInputsData(opData){
@@ -552,6 +553,8 @@
         chartsRef.forEach(chart=>{
           if(chart!=undefined) chart.destroy()
         })
+
+        document.querySelector(".opsTable__body").innerHTML=""
   
         alert("Action success!\n\tAll information has been completely removed")
       }
@@ -602,7 +605,7 @@
     /* Data generation */
     orderHistory.forEach((op, index)=>{
       /* Operations profits evolution */{
-        opProfit = RoundNumber(op[2] *op[3] *op[5])
+        opProfit= RoundNumber((op[2]*op[3]*op[5]) +((op[2]*op[3]*0.0045*-1) +op[7]))
 
         opDate= new Date(op[7]+"z")
         opDate= `${opDate.getMonth()+1}.${opDate.getDate()}`
@@ -723,6 +726,7 @@
       }
     })
     
+    GenerateTable()
     GenerateCharts()
   }
 
@@ -936,5 +940,64 @@
         });
       }
     })
+  }
+}
+
+/* Ops table scope */{
+  
+  function GenerateTable(){
+    let $tBody= document.querySelector(".opsTable__body"),
+    tBody= document.createElement("tbody"),
+    acumulated=0
+
+    orderHistory.forEach((op,i)=>{
+      let /* opBtn= document.createElement("button"), */
+      tRow= document.createElement("tr"),
+      opDate= new Date(op[6]),
+
+      tRowData= [
+        `${opDate.getFullYear()} `, /* closeDate */
+        RoundNumber(op[2]*op[3]*op[5]), /* PnL */
+        RoundNumber((op[2]*op[3]*0.0045*-1) +op[7]), /* total fees */
+        null, /* result */
+        null /* acumulated */,
+      ]
+
+      if(opDate.getMonth()+1 >9)
+        tRowData[0]+= `${opDate.getMonth()+1}`
+      else tRowData[0]+= `0${opDate.getMonth()+1}`
+      if(opDate.getDate() >9)
+        tRowData[0]+=`.${opDate.getDate()}`
+      else tRowData[0]+= `.0${opDate.getDate()}`
+
+      tRowData[3]= RoundNumber(tRowData[1]+tRowData[2])
+
+      if(i!=0) tRowData[4]= RoundNumber(tRowData[3] +acumulated)
+      else tRowData[4]= tRowData[3]
+
+      acumulated= (tRowData[3] +acumulated)
+
+      tRowData.forEach(item=>{
+        let tCell= document.createElement("td"),
+        tCellData= document.createTextNode(item)
+        tCell.classList.add("td")
+
+        tCell.appendChild(tCellData)
+        tRow.appendChild(tCell)
+      })
+
+      // TODO creating operation detail button
+      tRow.classList.add("tr")
+      tBody.appendChild(tRow)
+    })
+
+    $tBody.innerHTML= ""
+    $tBody.innerHTML+= tBody.innerHTML
+
+    // TODO Operation details button (onclick)
+  }
+
+  document.querySelector(".btn--opsTable").onclick= ()=>{
+    document.querySelector(".tableContainer").classList.toggle("display--n")
   }
 }

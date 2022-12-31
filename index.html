@@ -137,8 +137,8 @@
               </button>
             </footer>
           </article>
-          
         </div>
+      </div>
     </section>
     
     
@@ -163,7 +163,24 @@
         <h3 class="section__subTitle">Logbook</h3>
         <p>Get an order history manager for your trading operations and get an automatic statistical analysis by the graphical logbook conversor</p>
 
-        <button class="btn btn--color1 btn--newContainer">New operation menu</button>
+        <div class="containerButtons">
+          <button class="btn btn--dark btn--newContainer">New operation menu</button>
+          <button class="btn btn--dark btn--opsTable">Show/Hide operations Table</button>
+        </div>
+
+        <div class="container tableContainer display--n">
+          <table class="opsTable">
+            <thead class="thead">
+              <th class="th">Close date</th>
+              <th class="th">PnL ($)</th>
+              <th class="th">Fees ($)</th>
+              <th class="th">Result ($)</th>
+              <th class="th">Evolution ($)</th>
+            </thead>
+            <tbody class="opsTable__body">
+            </tbody>
+          </table>
+        </div>
 
         <div class="newOpContainer display--f display--n">
           <div class="container newOpMainContainer">
@@ -171,13 +188,13 @@
             <div class="container__body newOpcontainer__container">
               <!-- category -->
               <select name="" class="newOp__item">
-                <option value="">Category</option>
+                <option value="">Pair (A)</option>
                 <option value="btc">BTC</option>
               </select>
 
               <!-- margin type -->
               <select name="" class="newOp__item">
-                <option value="">Margin type</option>
+                <option value="">Pair (B)</option>
                 <option value="usdt">USDT</option>
               </select>
               
@@ -225,9 +242,9 @@
             </div>
 
             <footer class="subContainer__footer">
-              <button class="btn btn--color1 btn--opData">Save data</button>
-              <button class="btn btn--dark btn--opData">Clear data</button>
-              <button class="btn btn--dark btn--newContainer">Close menu</button>
+              <button class="btn btn--dark btn--opData">Save</button>
+              <button class="btn btn--dark btn--opData">Clear</button>
+              <button class="btn btn--dark btn--newContainer">Close</button>
             </footer>
           </div>
         </div>
@@ -368,7 +385,7 @@
         <div class="container">
           <header class="container__header">Select theme mode</header>
           <div class="container__body">
-            <div class="containerThemeButtons">
+            <div class="containerButtons">
               <button class="btn btn--dark btn--theme">
                 Custom mode
               </button>
@@ -388,19 +405,19 @@
                 <div class="containerColors">
                   <div class="color">
                     <input class="customColor" type="color" id="mainColor" name="mainColor" value="#808080">
-                    <label for="mainColor">mainColor</label>
+                    <label for="mainColor">Main</label>
                   </div>
                   <div class="color">
                     <input class="customColor" type="color" id="secondColor" name="secondColor" value="#101010">
-                    <label for="secondColor">secondColor</label>
+                    <label for="secondColor">Second</label>
                   </div>
                   <div class="color">
                     <input class="customColor" type="color" id="color1" name="color1" value="#00C000">
-                    <label for="color1">color1</label>
+                    <label for="color1">Color1</label>
                   </div>
                   <div class="color">
                     <input class="customColor" type="color" id="color2" name="color2" value="#C00000">
-                    <label for="color2">color2</label>
+                    <label for="color2">Color2</label>
                   </div>
                 </div>
               </div>
@@ -461,8 +478,8 @@
             </div>
             
             <!-- Delete data -->
-            <div class="subContainer subContainer--dark">
-              <div class="subContainer__header subContainer__header--color2">Delete data</div>
+            <div class="subContainer">
+              <div class="subContainer__header">Delete data</div>
             
               <div class="subContainer__body">
                 <p>ATTENTION, permanent and irreversible action!</p>
@@ -471,7 +488,7 @@
               </div>
             
               <footer class="subContainer__footer">
-                <button class="btn btn--color2 btn--deleteData">Delete data</button>
+                <button class="btn btn--dark btn--deleteData">Delete data</button>
               </footer>
             </div>
           </div>
