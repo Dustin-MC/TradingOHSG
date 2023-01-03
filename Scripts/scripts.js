@@ -3,6 +3,7 @@
   hideMenu= true;
   chartsRef= [],
   orderHistory= null,
+  oldestBalance= null
 
   // Setting persisted themeMode
   document.addEventListener("DOMContentLoaded", ()=>{
@@ -67,6 +68,8 @@
   
 
   function ToggleSection(index){
+    let showedLangs= document.querySelector(".lang")
+    
     /* If operation data container is showed hide it */
     let $opDataContainer= document.querySelector(".newOpContainer").classList
     if(!$opDataContainer.contains("display--n")) $opDataContainer.toggle("display--n")
@@ -83,7 +86,8 @@
     }
     currentSection= index
 
-    if(hideMenu){ HideMenu(true) }
+    if(hideMenu) HideMenu(true)
+    if(showedLangs.hasAttribute("open")) showedLangs.removeAttribute("open")
   }
 
 
@@ -549,6 +553,7 @@
         orderHistory= null
         localStorage.removeItem("orderH")
         localStorage.removeItem("tempOp")
+        localStorage.removeItem("oldestBalance")
 
         chartsRef.forEach(chart=>{
           if(chart!=undefined) chart.destroy()
@@ -602,6 +607,23 @@
 
 
     
+    /* Oldest balance */{
+      if(localStorage.getItem("oldestBalance")!=null) oldestBalance= Number(localStorage.getItem("oldestBalance"))
+
+      else{
+        while(true){
+          try {
+            oldestBalance= RoundNumber(Number(prompt("Insert your current account balance:")))
+            
+            if(confirm(`This is the correct value: $${oldestBalance}`)) break
+          }
+          catch{
+            alert("Action not completed!\n\tEnter a new input value")
+          }
+        }
+      }
+    }
+
     /* Data generation */
     orderHistory.forEach((op, index)=>{
       /* Operations profits evolution */{
@@ -612,10 +634,10 @@
 
         // New acumulated profit
         opsProfitsEvolution= opProfit
-        if(index!=0){
-          opsProfitsEvolution+= chartsData["profitsEvolution"][1][chartsData["profitsEvolution"][1].length -1]
-        }
-
+        if(index!=0) opsProfitsEvolution= RoundNumber(opsProfitsEvolution +chartsData["profitsEvolution"][1][chartsData["profitsEvolution"][1].length -1])
+        
+        else if(localStorage.getItem("oldestBalance")!=null) opsProfitsEvolution= RoundNumber(opsProfitsEvolution +oldestBalance)
+        
         /* setting chart data  */
         chartsData["profitsEvolution"][0].push(opDate)
         chartsData["profitsEvolution"][1].push(opsProfitsEvolution)
@@ -725,8 +747,19 @@
         }
       }
     })
+
+    // Checking oldest balance value
+    if(localStorage.getItem("oldestBalance")==null){
+      oldestBalance-= chartsData["profitsEvolution"][1][chartsData["profitsEvolution"][1].length -1]
+
+      localStorage.setItem("oldestBalance", RoundNumber(oldestBalance))
+
+      chartsData["profitsEvolution"][1].forEach((e,i)=>{
+        chartsData["profitsEvolution"][1][i]= RoundNumber(e+oldestBalance)
+      })
+    }
     
-    GenerateTable()
+    GenerateTable(chartsData["profitsEvolution"][1])
     GenerateCharts()
   }
 
@@ -769,7 +802,7 @@
               
               borderColor: $colors[0],
               fill: {
-                target: 'origin',
+                target: {value:oldestBalance},
                 above: $colors[1],
                 below: $colors[2]
               },
@@ -945,10 +978,9 @@
 
 /* Ops table scope */{
   
-  function GenerateTable(){
+  function GenerateTable(acumulated){
     let $tBody= document.querySelector(".opsTable__body"),
-    tBody= document.createElement("tbody"),
-    acumulated=0
+    tBody= document.createElement("tbody")
 
     orderHistory.forEach((op,i)=>{
       let /* opBtn= document.createElement("button"), */
@@ -960,7 +992,7 @@
         RoundNumber(op[2]*op[3]*op[5]), /* PnL */
         RoundNumber((op[2]*op[3]*0.0045*-1) +op[7]), /* total fees */
         null, /* result */
-        null /* acumulated */,
+        acumulated[i] /* acumulated */,
       ]
 
       if(opDate.getMonth()+1 >9)
@@ -972,17 +1004,17 @@
 
       tRowData[3]= RoundNumber(tRowData[1]+tRowData[2])
 
-      if(i!=0) tRowData[4]= RoundNumber(tRowData[3] +acumulated)
-      else tRowData[4]= tRowData[3]
-
-      acumulated= (tRowData[3] +acumulated)
-
-      tRowData.forEach(item=>{
+      tRowData.forEach((item, i)=>{
         let tCell= document.createElement("td"),
         tCellData= document.createTextNode(item)
         tCell.classList.add("td")
 
-        tCell.appendChild(tCellData)
+        if(i!=tRowData.length-1) tCell.appendChild(tCellData)
+        else{
+          b= document.createElement("b")
+          b.appendChild(tCellData)
+          tCell.appendChild(b)
+        }
         tRow.appendChild(tCell)
       })
 

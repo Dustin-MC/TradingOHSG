@@ -1,0 +1,64 @@
+.navToggler{
+  display: none;
+}
+
+.nav__body{
+  position: static;
+  display: flex;
+  flex-direction: row;
+  overflow-y: visible;
+  max-height: var(--headerHeight);
+}
+
+.nav__item{
+  border-left: 1px dashed var(--mainColor);
+}
+
+.lang__title{
+  max-height: 100%;
+}
+.lang__items{
+  padding: .2rem;
+  background-color: var(--secondColor);
+}
+
+
+.main{
+  padding-top: 0;
+  margin-top: var(--headerHeight);
+  margin-bottom: var(--footerHeight);
+  min-height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+}
+.footer{
+  position: fixed;
+}
+
+.section{
+  position: relative;
+  flex-direction: row;
+  --section1Width: 360px;
+}
+.section__ly{
+  padding-top: 1rem;
+}
+.section__ly1{
+  position: sticky;
+  top: calc(var(--headerHeight));
+  width: 30%;
+  min-width: var(--section1Width);
+  max-height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+  justify-content: space-evenly;
+  overflow-y: auto;
+}
+.section__ly2{
+  width: 70%;
+  max-width: calc(100% - var(--section1Width));
+}
+
+.btn--opsTable{
+  display: none;
+}
+.tableContainer{
+  display: flex;
+  overflow: auto;
+}

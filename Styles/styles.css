@@ -148,8 +148,9 @@ p{
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  width: 45%;
   min-width: 300px;
-  max-width: 30%;
+  max-width: 360px;
   text-align: center;
   outline: 2px solid var(--secondColor);
   border-radius: 1rem;
@@ -175,7 +176,7 @@ p{
 
 
 .container, .subContainer{
-  width: 90%;
+  width: 95%;
   margin: 0 auto 1rem;
   min-width: 320px;
   border: 2px solid var(--secondColor);
@@ -270,6 +271,7 @@ p{
   margin: 0 0 .8rem;
   padding: .4rem;
   border: none;
+  color: var(--mainColor);
   background-color: var(--secondColor);
   border-radius: .4rem;
   -webkit-border-radius: .4rem;
@@ -323,8 +325,8 @@ p{
   padding: 1rem;
   margin: 0;
   text-align: center;
-  background-color: var(--secondColor);
   color: var(--mainColor);
+  background-color: var(--secondColor);
   border: none;
   border-radius: 0;
   -webkit-border-radius: 0;
@@ -332,14 +334,24 @@ p{
   -ms-border-radius: 0;
   -o-border-radius: 0;
 }
-.language{
+
+.lang{
+  padding: 0;
+  background-color: var(--secondColor);
+}
+.lang__title{
+  padding: 1rem;
   list-style: none;
+}
+.lang__item{
+  margin: .2rem;
 }
 
 
 .tableContainer{
   /* display: flex; */
   /* justify-content: center; */
+  max-width: 100%;
   overflow-x: auto;
 }
 

@@ -11,8 +11,13 @@
   <meta name="description" content="Trading order history manager and graphical logbook conversor (statistic graphs).">
 
 
-  <link rel="stylesheet" href="Styles/Normalize8.0.1.min.css">
+  <link rel="stylesheet" href="Styles/Min/Normalize8.0.1.min.css">
   <link rel="stylesheet" href="Styles/styles.min.css">
+
+  <!-- Responsive styles-->
+  <link rel="stylesheet" href="./Styles/Min/responsiveTablet.min.css" media="screen and (min-width: 768px) and (max-width: 1023px)">
+
+  <link rel="stylesheet" href="./Styles/Min/responsivePc.min.css" media="screen and (min-width: 1024px)">
 </head>
 
 <body>
@@ -29,10 +34,12 @@
         <button class="btn nav__item">User Guide</button>
         <button class="btn nav__item">LogBoook</button>
         <button class="btn nav__item">Settings</button>
-        <details class="btn nav__item">
-          <summary class="language">Languages</summary>
-          <div class="btn language__item" onclick="alert('No Changes! \n\tCurrent Language');">English</div>
-          <div class="btn language__item" onclick="alert('Comming soon! \n\tSpanish Language');">Spanish</div>
+        <details class="btn nav__item lang">
+          <summary class="lang__title">Languages</summary>
+          <div class="lang__items">
+            <div class="btn lang__item" onclick="alert('No Changes! \n\tCurrent Language');">English</div>
+            <div class="btn lang__item" onclick="alert('Comming soon! \n\tSpanish Language');">Spanish</div>
+          </div>
         </details>
         <button class="btn nav__item">About</button>
       </div>
@@ -140,8 +147,8 @@
         </div>
       </div>
     </section>
-    
-    
+
+
     <!-- Section UserGuide -->
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">
@@ -154,7 +161,7 @@
         
       </div>
     </section>
-    
+
 
     <!-- Section Logbook -->
     <section class="section display--f display--n">
@@ -249,7 +256,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="section__ly section__ly2">
         <!-- chart operations profits evolution -->
         <div class="container">
