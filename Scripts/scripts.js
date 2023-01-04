@@ -213,7 +213,7 @@
   $themeBtns.forEach(item=>{
     if(item.dataset.mode=="temp") item.onclick=()=>TemporalThemeMode()
     else if(item.dataset.mode=="custom") item.onclick=()=>document.querySelector(".customThemeContainer").classList.toggle("display--n")
-    else item.onclick=()=> ChangeThemeMode(parseInt(item.dataset.mode))
+    else item.onclick=()=>ChangeThemeMode(parseInt(item.dataset.mode))
   })
 }
 

@@ -40,6 +40,7 @@ body{
 
 h1, h2, h3, h4{
   margin: .5rem 0;
+  line-height: 1.15em;
 }
 
 p{
@@ -87,6 +88,10 @@ p{
 .section__ly{
   display: flex;
   flex-direction: column;
+}
+.section__ly2{
+  flex-grow: 1;
+  justify-content: center;
 }
 
 
@@ -142,6 +147,7 @@ p{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  margin: auto 0;
 }
 
 .card{
@@ -278,6 +284,7 @@ p{
   -moz-border-radius: .4rem;
   -ms-border-radius: .4rem;
   -o-border-radius: .4rem;
+  color-scheme: dark;
 }
 .newOp__item::placeholder{
   color: currentColor;
