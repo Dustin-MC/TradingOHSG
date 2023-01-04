@@ -393,44 +393,47 @@
           <header class="container__header">Select theme mode</header>
           <div class="container__body">
             <div class="containerButtons">
-              <button class="btn btn--dark btn--theme">
+              <button class="btn btn--dark btn--theme" data-mode="custom">
                 Custom mode
               </button>
-              <button class="btn btn--dark btn--theme">
+              <button class="btn btn--dark btn--theme" data-mode="1">
                 Dark mode
               </button>
-              <button class="btn btn--dark btn--theme">
+              <button class="btn btn--dark btn--theme" data-mode="2">
                 Light mode
               </button>
             </div>
 
-            <div class="subContainer">
-              <header class="subContainer__header">
-                Custom mode colors
-              </header>
-              <div class="subContainer__body">
-                <div class="containerColors">
-                  <div class="color">
-                    <input class="customColor" type="color" id="mainColor" name="mainColor" value="#808080">
-                    <label for="mainColor">Main</label>
-                  </div>
-                  <div class="color">
-                    <input class="customColor" type="color" id="secondColor" name="secondColor" value="#101010">
-                    <label for="secondColor">Second</label>
-                  </div>
-                  <div class="color">
-                    <input class="customColor" type="color" id="color1" name="color1" value="#00C000">
-                    <label for="color1">Color1</label>
-                  </div>
-                  <div class="color">
-                    <input class="customColor" type="color" id="color2" name="color2" value="#C00000">
-                    <label for="color2">Color2</label>
+            <div class="customThemeContainer display--n">
+              <div class="subContainer">
+                <header class="subContainer__header">
+                  Custom mode colors
+                </header>
+                <div class="subContainer__body">
+                  <div class="containerColors">
+                    <div class="color">
+                      <input class="customColor" type="color" id="mainColor" name="mainColor" value="#808080">
+                      <label for="mainColor">Main</label>
+                    </div>
+                    <div class="color">
+                      <input class="customColor" type="color" id="secondColor" name="secondColor" value="#101010">
+                      <label for="secondColor">Second</label>
+                    </div>
+                    <div class="color">
+                      <input class="customColor" type="color" id="color1" name="color1" value="#00C000">
+                      <label for="color1">Color1</label>
+                    </div>
+                    <div class="color">
+                      <input class="customColor" type="color" id="color2" name="color2" value="#C00000">
+                      <label for="color2">Color2</label>
+                    </div>
                   </div>
                 </div>
+                <footer class="subContainer__footer">
+                  <button class="btn btn--dark btn--theme" data-mode="temp">Test colors</button>
+                  <button class="btn btn--dark btn--theme" data-mode="0">Apply</button>
+                </foot>
               </div>
-              <footer class="subContainer__footer">
-                <button class="btn btn--dark btn--theme">Test colors</button>
-              </foot>
             </div>
           </div>
         </div>

@@ -69,7 +69,7 @@
 
   function ToggleSection(index){
     let showedLangs= document.querySelector(".lang")
-    
+
     /* If operation data container is showed hide it */
     let $opDataContainer= document.querySelector(".newOpContainer").classList
     if(!$opDataContainer.contains("display--n")) $opDataContainer.toggle("display--n")
@@ -127,7 +127,7 @@
  
   
   function TemporalThemeMode(){
-    $themeBtns[3].disabled= true;
+    $themeBtns.forEach(e=>{e.disabled= true})
 
     // variables
     let $currentColors=[
@@ -151,7 +151,8 @@
       $root.style.setProperty("--secondColor", $currentColors[1]);
       $root.style.setProperty("--color1", $currentColors[2]);
       $root.style.setProperty("--color2", $currentColors[3]);
-      $themeBtns[3].removeAttribute("disabled")
+
+      $themeBtns.forEach(e=>{e.removeAttribute("disabled")})
     }, 4000);
   }
 
@@ -162,6 +163,8 @@
 
     if( themeMode== 0){
       if(isManualTheme){
+        document.querySelector(".customThemeContainer").classList.toggle("display--n")
+
         $root.style.setProperty("--mainColor", $colors[0].value);
         $root.style.setProperty("--secondColor", $colors[1].value);
         $root.style.setProperty("--color1", $colors[2].value);
@@ -207,11 +210,11 @@
     }
   }
   
-
-  $themeBtns[0].onclick= function(){ChangeThemeMode(0)}
-  $themeBtns[1].onclick= function(){ChangeThemeMode(1)}
-  $themeBtns[2].onclick= function(){ChangeThemeMode(2)}
-  $themeBtns[3].onclick= function(){TemporalThemeMode()}
+  $themeBtns.forEach(item=>{
+    if(item.dataset.mode=="temp") item.onclick=()=>TemporalThemeMode()
+    else if(item.dataset.mode=="custom") item.onclick=()=>document.querySelector(".customThemeContainer").classList.toggle("display--n")
+    else item.onclick=()=> ChangeThemeMode(parseInt(item.dataset.mode))
+  })
 }
 
 
@@ -269,7 +272,7 @@
       // TODO if some browser dont save correctly the tempOp data, add opData[]= null
     })
 
-    if(opData.includes(null)) addOperation= false
+    if(opData.includes(null) || !(opData[3]>0)) addOperation= false
 
     formatedOp=[
       opData[0], // category
@@ -610,17 +613,16 @@
     /* Oldest balance */{
       if(localStorage.getItem("oldestBalance")!=null) oldestBalance= Number(localStorage.getItem("oldestBalance"))
 
-      else{
-        while(true){
-          try {
-            oldestBalance= RoundNumber(Number(prompt("Insert your current account balance:")))
-            
-            if(confirm(`This is the correct value: $${oldestBalance}`)) break
+      else while(true){
+        oldestBalance= RoundNumber(parseFloat(prompt("Insert your current account balance:")))
+
+        if(!isNaN(oldestBalance)){
+          if(oldestBalance>0){
+            if(confirm(`Confirming the balance!\n\tIs this the correct value?: $${oldestBalance}`)) break
           }
-          catch{
-            alert("Action not completed!\n\tEnter a new input value")
-          }
+          else alert("Action not completed! \n\tBalance must be a value greater than zero.")
         }
+        else alert("Action not completed! \n\tBalance must be a numeric value.")
       }
     }
 
