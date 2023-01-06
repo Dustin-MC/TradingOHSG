@@ -573,7 +573,9 @@
 
 /* Charts Scope */{
   let $charts= document.querySelectorAll(".chart"),
-  chartsData= {}
+  chartsData= {},
+  $lyChartsBtns= document.querySelectorAll(".btn--chart"),
+  $lyChartContainers= document.querySelectorAll(".lyChartContainer")
 
   function GenerateChartsData(){
     // operation profit evolution
@@ -976,6 +978,32 @@
       }
     })
   }
+
+  $lyChartsBtns.forEach((e,i)=>{
+    e.onclick=()=>{
+      console.log("button\n\t",e)
+      let name= e.dataset.chartcontainer;
+      document.querySelectorAll(".subLy")[0].classList.toggle("display--n")
+      document.querySelectorAll(".subLy")[1].classList.toggle("display--n")
+
+      if(i!= $lyChartContainers.length){
+        console.log(e)
+        $lyChartContainers.forEach(el=>{
+          if(el.dataset.chartcontainer==name){
+            console.log("show")
+            console.log(el)
+            console.log(el.dataset.chartcontainer)
+            el.classList.remove("display--n")
+          }
+          else{
+            console.log("dont show")
+            console.log(el)
+            el.classList.add("display--n")
+          }
+        })
+      }
+    }
+  })
 }
 
 /* Ops table scope */{

@@ -5,9 +5,8 @@
 :root{
   --themeColor1: #808080;
   --themeColor2: #101010;
-  --themeColor3: #00C000;
-  --themeColor4: #C00000;
-  --themeColor5: #c0c0c0;
+  --themeColor3: #008000;
+  --themeColor4: #800000;
 
   --mainColor: var(--themeColor1);
   --secondColor: var(--themeColor2);
@@ -94,6 +93,13 @@ p{
   justify-content: center;
 }
 
+.subLy{
+  flex-grow: 1;
+  flex-wrap: wrap;
+  align-content: space-evenly;
+  justify-content: space-evenly;
+}
+
 
 
 
@@ -136,6 +142,14 @@ p{
 .btn--dark{
   background-color: var(--secondColor);
   color: var(--mainColor);
+}
+.btn--chart{
+  margin: 1rem 1rem;
+  border-radius: .4em;
+  -webkit-border-radius: .4em;
+  -moz-border-radius: .4em;
+  -ms-border-radius: .4em;
+  -o-border-radius: .4em;
 }
 
 .section__title, .section__subTitle{
@@ -366,6 +380,12 @@ p{
   width: 100%;
   text-align: center;
   border-collapse: collapse;
+}
+.caption{
+  padding: .4rem;
+  color: var(--mainColor);
+  background-color: var(--secondColor);
+  border-bottom: 1px dashed var(--mainColor);
 }
 .thead{
   color: var(--mainColor);
