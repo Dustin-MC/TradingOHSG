@@ -12,6 +12,11 @@
 
 .nav__item{
   border-left: 1px dashed var(--mainColor);
+  transition: var(--transition);
+  -webkit-transition: var(--transition);
+  -moz-transition: var(--transition);
+  -ms-transition: var(--transition);
+  -o-transition: var(--transition);
 }
 
 .lang__title{
@@ -80,6 +85,13 @@
   -webkit-filter: opacity(.75) saturate(1.25);
 }
 
+.container{
+  margin-bottom: 2rem;
+}
+.newOpMainContainer{
+  margin-bottom: auto;
+}
+
 .tableContainer{
   overflow: auto;
 }
@@ -93,4 +105,7 @@
 .btn--chart{
   margin: 2rem;
   padding: 2rem;
+}
+.btn--chartMenu{
+  margin: 1rem;
 }

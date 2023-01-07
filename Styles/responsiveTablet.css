@@ -12,6 +12,9 @@
   margin: 2rem;
   padding: 2rem;
 }
+.btn--chartMenu{
+  margin: 1rem;
+}
 
 .section__ly1{
   position: relative;
@@ -43,6 +46,13 @@
   background-image: linear-gradient(var(--color1), var(--color2));
   filter: opacity(.75) saturate(1.25);
   -webkit-filter: opacity(.75) saturate(1.25);
+}
+
+.container{
+  margin-bottom: 2rem;
+}
+.newOpMainContainer{
+  margin-bottom: auto;
 }
 
 .opsTable{

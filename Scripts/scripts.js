@@ -213,7 +213,10 @@
   $themeBtns.forEach(item=>{
     if(item.dataset.mode=="temp") item.onclick=()=>TemporalThemeMode()
     else if(item.dataset.mode=="custom") item.onclick=()=>document.querySelector(".customThemeContainer").classList.toggle("display--n")
-    else item.onclick=()=>ChangeThemeMode(parseInt(item.dataset.mode))
+    else item.onclick=()=>{
+      ChangeThemeMode(parseInt(item.dataset.mode))
+      document.querySelector(".customThemeContainer").classList.add("display--n")
+    }
   })
 }
 
@@ -242,7 +245,7 @@
             if(i==5){
               if($pnlType.value=="%") opData[i]= RoundNumber(Number(e.value)/100)
 
-              else if($pnlType.value=="$") opData[i]= RoundNumber(Number(e.value) /(opData[2]*opData[3]))
+              else if($pnlType.value=="$") opData[i]= RoundNumber(Number(e.value) /(opData[2]*opData[3]),4)
 
               else{
                 opData[i]= RoundNumber(Number(e.value))
@@ -631,7 +634,7 @@
     /* Data generation */
     orderHistory.forEach((op, index)=>{
       /* Operations profits evolution */{
-        opProfit= RoundNumber((op[2]*op[3]*op[5]) +((op[2]*op[3]*0.0045*-1) +op[7]))
+        opProfit= RoundNumber((op[2]*op[3]*op[5]) +((op[2]*op[3]*0.00045*-1) +op[7]))
 
         opDate= new Date(op[7]+"z")
         opDate= `${opDate.getMonth()+1}.${opDate.getDate()}`
@@ -764,6 +767,10 @@
     }
     
     GenerateTable(chartsData["profitsEvolution"][1])
+    
+    chartsData["profitsEvolution"][0].unshift("x")
+    chartsData["profitsEvolution"][1].unshift(oldestBalance)
+
     GenerateCharts()
   }
 
@@ -981,25 +988,14 @@
 
   $lyChartsBtns.forEach((e,i)=>{
     e.onclick=()=>{
-      console.log("button\n\t",e)
       let name= e.dataset.chartcontainer;
       document.querySelectorAll(".subLy")[0].classList.toggle("display--n")
       document.querySelectorAll(".subLy")[1].classList.toggle("display--n")
 
       if(i!= $lyChartContainers.length){
-        console.log(e)
         $lyChartContainers.forEach(el=>{
-          if(el.dataset.chartcontainer==name){
-            console.log("show")
-            console.log(el)
-            console.log(el.dataset.chartcontainer)
-            el.classList.remove("display--n")
-          }
-          else{
-            console.log("dont show")
-            console.log(el)
-            el.classList.add("display--n")
-          }
+          if(el.dataset.chartcontainer==name) el.classList.remove("display--n")
+          else el.classList.add("display--n")
         })
       }
     }
@@ -1007,10 +1003,20 @@
 }
 
 /* Ops table scope */{
-  
   function GenerateTable(acumulated){
     let $tBody= document.querySelector(".opsTable__body"),
-    tBody= document.createElement("tbody")
+    tBody= document.createElement("tbody"),
+    firstRow= document.createElement("tr"),
+    x= oldestBalance
+
+    if(localStorage.getItem("oldestBalance")==null) x= (oldestBalance +(oldestBalance -acumulated[0])).toFixed(2)
+
+    firstRow.classList.add("tr")
+    firstRow.innerHTML= `<td>--</td><td>--</td>
+      <td>--</td><td>--</td>
+      <td><b>${x}</b></td>`
+    
+    tBody.appendChild(firstRow)
 
     orderHistory.forEach((op,i)=>{
       let /* opBtn= document.createElement("button"), */
@@ -1020,7 +1026,7 @@
       tRowData= [
         `${opDate.getFullYear()} `, /* closeDate */
         RoundNumber(op[2]*op[3]*op[5]), /* PnL */
-        RoundNumber((op[2]*op[3]*0.0045*-1) +op[7]), /* total fees */
+        RoundNumber((op[2]*op[3]*0.00045*-1) +op[7]), /* total fees */
         null, /* result */
         acumulated[i] /* acumulated */,
       ]
