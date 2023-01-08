@@ -145,6 +145,8 @@ p{
   display: flex;
   align-items: center;
   height: 100%;
+  text-decoration: none;
+  color: var(--mainColor);
 }
 .logo__icon{
   max-height: 100%;
