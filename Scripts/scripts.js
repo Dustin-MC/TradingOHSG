@@ -216,6 +216,28 @@
     else item.onclick=()=>{
       ChangeThemeMode(parseInt(item.dataset.mode))
       document.querySelector(".customThemeContainer").classList.add("display--n")
+      
+      /* confirming custom mode */
+      if(parseInt(item.dataset.mode)==0){
+        setTimeout(function(){
+          while(true){
+            let x= prompt("Theme confirmation:\n\t1. Enter 'OK' to preserv the theme\n\t2. Enter 'REMOVE' to remove the theme")
+
+            if(x=="OK") break
+
+            else if(x=="REMOVE"){
+              if(confirm("Theme confirmation:\n\tDo you really want to remove the selected custom mode?")){
+                localStorage.removeItem("theme")
+                localStorage.removeItem("themeColors")
+                ChangeThemeMode(2)
+                break
+              }
+            }
+          }
+        }, 4000);
+      }
+
+
     }
   })
 }
@@ -235,17 +257,17 @@
     addOperation= true,
     $newOpItems= document.querySelectorAll(".newOp__item"),
     $pnlType= document.querySelector(".newOp__item--pnl")
-
+    
     // Temporal operation data
     $newOpItems.forEach((e,i) =>{
       if(e.value!=""){
-        if(i!=6){ // not date input
-          if(i!=7){ // not time input
+        if(i!=5){ // not date input
+          if(i!=6){ // not time input
             // $PnL or $PnL
-            if(i==5){
-              if($pnlType.value=="%") opData[i]= RoundNumber(Number(e.value)/100)
+            if(i==4){
+              if($pnlType.value=="%") opData[i]= RoundNumber((Number(e.value)/100)*opData[1]*opData[2])
 
-              else if($pnlType.value=="$") opData[i]= RoundNumber(Number(e.value) /(opData[2]*opData[3]),4)
+              else if($pnlType.value=="$") opData[i]= RoundNumber(Number(e.value))
 
               else{
                 opData[i]= RoundNumber(Number(e.value))
@@ -259,12 +281,10 @@
         
         else{ // create dateTime value
           try {
-            let d1, dateString= `${e.value} ${$newOpItems[i+1].value}:00Z`
-            
-            d1= new Date(dateString)
-            d1= new Date(Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate(), d1.getHours()+(d1.getTimezoneOffset()/60), d1.getMinutes(), 0))
-            
+            let d1= new Date(`${e.value} ${$newOpItems[i+1].value}:00Z`)
+
             d1= d1.toJSON().replace("T"," ").replace(".000Z","")
+
             opData[i]= d1
           }
           catch{ addOperation= false }
@@ -275,24 +295,25 @@
       // TODO if some browser dont save correctly the tempOp data, add opData[]= null
     })
 
-    if(opData.includes(null) || !(opData[3]>0)) addOperation= false
+    if(opData.includes(null) || !(opData[2]>0)) addOperation= false
 
     formatedOp=[
-      opData[0], // category
-      opData[1], // marginType
-      opData[2], // leverage
-      opData[3], // margin
-      opData[4], // direction
-      opData[5], // realized PnL
-      opData[6], // closeDateTime
-      opData[8], // funding fees
+      opData[0], // category/marginType
+      opData[1], // leverage
+      opData[2], // margin
+      opData[3], // direction
+      opData[4], // realized PnL
+      opData[5], // closeDateTime
+      opData[7], // funding fees
     ]
     
-    if(formatedOp[4]=="true") formatedOp[4]= true
-    else if(formatedOp[4]=="false") formatedOp[4]= false
-    else formatedOp[4]==null
+    if(formatedOp[3]=="true") formatedOp[3]= true
+    else if(formatedOp[3]=="false") formatedOp[3]= false
+    else formatedOp[3]==null
 
     if(addOperation){
+      formatedOp[5]= (new Date(formatedOp[5])).toJSON().replace("T"," ").replace(".000Z","")
+
       AddNewOperations([JSON.stringify(formatedOp),])
       localStorage.removeItem("tempOp")
       ClearOpInputs()
@@ -331,21 +352,17 @@
         for(let i=2; i<fileData.length; i++){
           // bingX orderH op to TOHSG orderH op
           let fileOp=[
-            fileData[i][2], // 0 category
-            fileData[i][3], // 1 marginType
-            fileData[i][5], // 2 leverage
-            fileData[i][4], // 3 margin
-            fileData[i][8], // 4 direction
-            fileData[i][16], // 5 realized PnL
-            ConvertDate(fileData[i][13]), // 6
-            fileData[i][14], // 7 fudingFee
+            `${fileData[i][2]}_${fileData[i][3]}`, // 0 category && marginType
+            fileData[i][5], // 1 leverage
+            fileData[i][4], // 2 margin
+            fileData[i][8], // 3 direction
+            RoundNumber(fileData[i][16]), // 4 realized PnL
+            ConvertDate(fileData[i][13]), // 5
+            fileData[i][14], // 6 fudingFee
           ]
 
-          if(fileOp[4]=="long") fileOp[4]= true
-          else fileOp[4]= false
-
-          // $PnL to %PnL
-          fileOp[5]= RoundNumber(fileOp[5]/(fileOp[2]*fileOp[3]))
+          if(fileOp[3]=="long") fileOp[3]= true
+          else fileOp[3]= false
           
           importedData.push(JSON.stringify(fileOp))
         }
@@ -362,6 +379,7 @@
         
         fileReader.onload = function() {
           try {
+            // Importing theme
             if(fileData["name"].includes("theme")){
               localStorage.setItem("themeColors", fileReader.result);
               ChangeThemeMode(0, false, true)
@@ -369,6 +387,7 @@
               if(orderHistory!= null) GenerateCharts()
             }
   
+            // Importing data
             else{
               JSON.parse(fileReader.result).forEach(operation => {
                 importedData.push(JSON.stringify(operation))
@@ -378,7 +397,7 @@
             }
           }
           catch(e){
-            console.log("TOHSG error\n",e)
+            console.error("TOHSG error\n",e)
             alert("Action not completed! \n\tTry again or Select another file.")
           }
         };
@@ -386,7 +405,7 @@
     }
     
     catch(e){
-      console.log("BingX error\n",e)
+      console.error("BingX error\n",e)
       alert("Action not completed! \n\tTry again or Select another file.")
     }
   }
@@ -503,8 +522,8 @@
     /* setting inputs values */
     opData.forEach((e,i)=>{
       if(e!=null){
-        if(i!=7){ // not time imput
-          if(i==6){ //dateTime
+        if(i!=6){ // not time imput
+          if(i==5){ //dateTime
             $inputs[i].value= e.slice(0,10)
             $inputs[i+1].value= e.slice(11, 16)
           }
@@ -554,23 +573,38 @@
 
   /* Delete data */
   document.querySelector(".btn--deleteData").onclick= ()=>{
+    let $subLys= document.querySelectorAll(".subLy")
+    
+    $subLys[0].classList.remove("display--n")
+    $subLys[1].classList.add("display--n")
+    document.querySelector(".tableContainer").classList.add("display--n")
+
     if(localStorage.getItem("orderH")!=null){
       if(confirm("DATA DELETION!\n\tAre you sure to want to proceed with the action?")){
+
         orderHistory= null
         localStorage.removeItem("orderH")
         localStorage.removeItem("tempOp")
         localStorage.removeItem("oldestBalance")
-
+        
         chartsRef.forEach(chart=>{
           if(chart!=undefined) chart.destroy()
         })
-
+        
         document.querySelector(".opsTable__body").innerHTML=""
-  
+        
         alert("Action success!\n\tAll information has been completely removed")
       }
     }
     else alert("Action not completed!\n\tNo existing data to delete")
+
+    setTimeout(() => {
+      if(localStorage.getItem("theme")==0) if(confirm("THEME DELETION!\n\tDo you to want to delete the theme mode?")){
+        localStorage.removeItem("theme")
+        localStorage.removeItem("themeColors")
+        ChangeThemeMode(2)
+      }
+    }, 1000);
   }
 }
 
@@ -615,7 +649,7 @@
 
 
     
-    /* Oldest balance */{
+    /* Checking oldest balance */{
       if(localStorage.getItem("oldestBalance")!=null) oldestBalance= Number(localStorage.getItem("oldestBalance"))
 
       else while(true){
@@ -634,9 +668,9 @@
     /* Data generation */
     orderHistory.forEach((op, index)=>{
       /* Operations profits evolution */{
-        opProfit= RoundNumber((op[2]*op[3]*op[5]) +((op[2]*op[3]*0.00045*-1) +op[7]))
+        opProfit= RoundNumber(op[4] +((op[1]*op[2]*0.00045*-1) +op[6]))
 
-        opDate= new Date(op[7]+"z")
+        opDate= new Date(op[5]+"z")
         opDate= `${opDate.getMonth()+1}.${opDate.getDate()}`
 
         // New acumulated profit
@@ -651,7 +685,7 @@
       }
       
       /* Operations efectivity average */{
-        opOnePercent= (op[2]*op[3])/100
+        opOnePercent= (op[1]*op[2])/100
          
         if(opProfit> opOnePercent) tpOps++
         else if(opProfit< 0) slOps++
@@ -701,7 +735,7 @@
       }
 
       /* Longs && shorts average stats */{
-        if(op[4]){ // is long op?
+        if(op[3]){ // is long op?
           if(opProfit> opOnePercent){
             tpLongOps++
             tpLongOpsProfit+= opProfit
@@ -1011,22 +1045,24 @@
 
     if(localStorage.getItem("oldestBalance")==null) x= (oldestBalance +(oldestBalance -acumulated[0])).toFixed(2)
 
+    /* Adding initial balance row */
     firstRow.classList.add("tr")
     firstRow.innerHTML= `<td>--</td><td>--</td>
       <td>--</td><td>--</td>
-      <td><b>${x}</b></td>`
+      <td><b>${x.toFixed(2)}</b></td>`
     
     tBody.appendChild(firstRow)
 
+    /* Generating table */
     orderHistory.forEach((op,i)=>{
       let /* opBtn= document.createElement("button"), */
       tRow= document.createElement("tr"),
-      opDate= new Date(op[6]),
+      opDate= new Date(op[5]),
 
       tRowData= [
         `${opDate.getFullYear()} `, /* closeDate */
-        RoundNumber(op[2]*op[3]*op[5]), /* PnL */
-        RoundNumber((op[2]*op[3]*0.00045*-1) +op[7]), /* total fees */
+        op[4], /* PnL */
+        RoundNumber((op[1]*op[2]*0.00045*-1) +op[6]), /* total fees */
         null, /* result */
         acumulated[i] /* acumulated */,
       ]

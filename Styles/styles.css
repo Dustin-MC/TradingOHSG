@@ -3,10 +3,10 @@
 }
 
 :root{
-  --themeColor1: #808080;
+  --themeColor1: #a0a0a0;
   --themeColor2: #101010;
-  --themeColor3: #008000;
-  --themeColor4: #800000;
+  --themeColor3: #00c000;
+  --themeColor4: #c00000;
 
   --mainColor: var(--themeColor1);
   --secondColor: var(--themeColor2);
@@ -87,6 +87,11 @@ p{
 .section__ly{
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
+}
+.section__ly1{
+  position: relative;
+  text-shadow: .05em .05em .1em var(--mainColor);
 }
 .section__ly2{
   flex-grow: 1;
@@ -98,6 +103,31 @@ p{
   flex-wrap: wrap;
   align-content: space-evenly;
   justify-content: space-evenly;
+}
+
+.section__ly1::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-image: url("../Sources/Images/seamLessTexture.jpg");
+  filter: saturate(0);
+  -webkit-filter: saturate(0);
+}
+.section__ly1::after{
+  content:"";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(var(--color1), var(--color2));
+  filter: opacity(.75) saturate(1.25);
+  -webkit-filter: opacity(.75) saturate(1.25);
 }
 
 
@@ -150,6 +180,10 @@ p{
   -moz-border-radius: .4em;
   -ms-border-radius: .4em;
   -o-border-radius: .4em;
+}
+.btn--deleteData:hover{
+  color: var(--color2);
+  box-shadow: .1em .1em .2em var(--color2);
 }
 
 .section__title, .section__subTitle{
@@ -268,6 +302,7 @@ p{
   height: 100vh;
   max-height: 100vh;
   overflow-y: auto;
+  text-shadow: none;
   background-color: var(--mainColor);
 }
 
@@ -377,9 +412,11 @@ p{
 }
 
 .opsTable{
+  position: relative;
   width: 100%;
   text-align: center;
   border-collapse: collapse;
+  text-shadow: none;
 }
 .caption{
   padding: .4rem;
@@ -388,8 +425,13 @@ p{
   border-bottom: 1px dashed var(--mainColor);
 }
 .thead{
+  position: sticky;
+  top: 0;
   color: var(--mainColor);
   background-color: var(--secondColor);
+}
+.opsTable__body{
+  background-color: var(--mainColor);
 }
 .tr{
   border-bottom: 1px solid var(--secondColor);
