@@ -10,6 +10,7 @@
   <link rel="shortcut icon" href="Sources/Icons/webIcon.svg" type="image/svg">
   <meta name="description" content="Trading order history manager and graphical logbook conversor (statistic graphs).">
 
+  <link rel="stylesheet" href="Styles/iconsFont.min.css">
 
   <link rel="stylesheet" href="Styles/Normalize8.0.1.min.css">
   <link rel="stylesheet" href="Styles/styles.min.css">
@@ -22,26 +23,34 @@
 
 <body>
   <header class="header">
-    <a class="logo" href="https://dustin-mc.github.io/TradingOHSG/">
+    <div class="logo">
       <img src="Sources/Icons/webIcon.svg" alt="Web icon" class="logo__icon">
       <h1 class="logo__text">Trading OHSG</h1>
-    </a>
+    </div>
     
     <nav class="nav">
-      <button class="btn navToggler display--f">Menu</button>
+      <button class="btn navToggler display--f">Menu
+        <span class="icon icon-menu"></span>
+      </button>
       <div class="nav__body display--f display--n">
-        <button class="btn nav__item">Home</button>
-        <button class="btn nav__item display--n">User Guide</button>
-        <button class="btn nav__item">LogBoook</button>
-        <button class="btn nav__item">Settings</button>
+        <button class="btn nav__item">
+          <span class="icon icon-home"></span>Home</button>
+        <button class="btn nav__item display--n">
+          <span class="icon icon-learn"></span>User Guide</button>
+        <button class="btn nav__item">
+          <span class="icon icon-stats"></span>LogBoook</button>
+        <button class="btn nav__item">
+          <span class="icon icon-config"></span>Settings</button>
         <details class="btn nav__item lang">
-          <summary class="lang__title">Languages</summary>
+          <summary class="lang__title">
+            <span class="icon icon-lang"></span>Languages</summary>
           <div class="lang__items">
             <div class="btn lang__item" onclick="alert('No Changes! \n\tCurrent Language');">English</div>
             <div class="btn lang__item" onclick="alert('Comming soon! \n\tSpanish Language');">Spanish</div>
           </div>
         </details>
-        <button class="btn nav__item display--n">About</button>
+        <button class="btn nav__item display--n">
+          <span class="icon icon-info"></span>About</button>
       </div>
     </nav>
   </header>
@@ -74,7 +83,7 @@
               </p>
               <footer class="card__footer">
                 <button class="btn btn--dark btn--card btn--section">
-                  Learn
+                  <span class="icon icon-learn"></span>Learn
                 </button>
               </footer>
             </article>
@@ -97,7 +106,7 @@
             </p>
             <footer class="card__footer">
               <button class="btn btn--dark btn--card btn--section">
-                View stats
+                <span class="icon icon-stats"></span>View stats
               </button>
             </footer>
           </article>
@@ -120,7 +129,7 @@
             </p>
             <footer class="card__footer">
               <button class="btn btn--dark btn--card btn--section">
-                Settings
+                <span class="icon icon-config"></span>Settings
               </button>
             </footer>
           </article>
@@ -144,7 +153,7 @@
               </p>
               <footer class="card__footer">
                 <button class="btn btn--dark btn--card btn--section">
-                  About
+                  <span class="icon icon-info"></span>About
                 </button>
               </footer>
             </article>
@@ -158,12 +167,14 @@
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Operation and use of the site</h2>
-        <h3 class="section__subTitle">User Guide</h3>
+        <h3 class="section__subTitle">User Guide
+          <span class="icon icon-learn"></span>
+        </h3>
         <p>Learn the use and operation of each section of the site to obtain a record and analysis of all your trading operations.</p>
       </div>
 
       <div class="section__ly section__ly2">
-        
+        <div>sample section content</div>
       </div>
     </section>
 
@@ -172,18 +183,26 @@
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Order history and stadistical graphs</h2>
-        <h3 class="section__subTitle">Logbook</h3>
+        <h3 class="section__subTitle">Logbook
+          <span class="icon icon-stats"></span>
+        </h3>
         <p>Get an order history manager for your trading operations and get an automatic statistical analysis by the graphical logbook conversor</p>
 
         <div class="containerButtons">
-          <button class="btn btn--dark btn--newContainer">New operation menu</button>
-          <button class="btn btn--dark btn--opsTable">Show/Hide operations Table</button>
+          <button class="btn btn--dark btn--newContainer">New operation
+            <span class="icon icon-add"></span>
+          </button>
+          <button class="btn btn--dark btn--opsTable">Operations table
+            <span class="icon icon-table"></span>
+          </button>
         </div>
 
         <!-- Operations table -->
         <div class="container tableContainer display--f display--n">
           <table class="opsTable">
-            <caption class="caption">Balance evolution</caption>
+            <caption class="caption">Balance evolution
+              <span class="icon icon-chart1"></span>
+            </caption>
             <thead class="thead">
               <th class="th">Close date</th>
               <th class="th">PnL ($)</th>
@@ -273,10 +292,14 @@
       <div class="section__ly section__ly2">
         <!-- subSection Logbook (buttons) -->
         <div class="subLy display--f">
-          <button class="btn btn--dark btn--chart" data-chartcontainer="balanceEvolution">Balance evolution</button>
-          <button class="btn btn--dark btn--chart" data-chartcontainer="opsAvgStats">Operations average stats</button>
-          <button class="btn btn--dark btn--chart" data-chartcontainer="directionalAvgStats">Directional average stats</button>
-          <button class="btn btn--dark btn--chart" data-chartcontainer="directionalStats">Directional detailed stats</button>
+          <button class="btn btn--dark btn--chart" data-chartcontainer="balanceEvolution">
+            <span class="icon icon-chart1"></span>Balance evolution</button>
+          <button class="btn btn--dark btn--chart" data-chartcontainer="opsAvgStats">
+            <span class="icon icon-chart2"></span>Operations average stats</button>
+          <button class="btn btn--dark btn--chart" data-chartcontainer="directionalAvgStats">
+            <span class="icon icon-chart2"></span>Directional average stats</button>
+          <button class="btn btn--dark btn--chart" data-chartcontainer="directionalStats">
+            <span class="icon icon-chart2"></span>Directional detailed stats</button>
           <!-- <button class="btn btn--dark btn--chart">Orders full details</button> -->
         </div>
 
@@ -285,7 +308,9 @@
           <!-- chart balance evolution -->
           <div class="lyChartContainer display--f display--n" data-chartcontainer="balanceEvolution">
             <div class="container" >
-              <header class="container__header">Balance evolution ($)</header>
+              <header class="container__header">Balance evolution ($)
+                <span class="icon icon-chart1"></span>
+              </header>
 
               <div class="container__body">
                 <p>Evolution of account balance over time, based on the results obtained from each completed operation</p>
@@ -299,7 +324,9 @@
           <!-- chart operations average stats -->
           <div class="lyChartContainer display--f display--n" data-chartcontainer="opsAvgStats">
             <div class="container" >
-              <header class="container__header">Operations average stats</header>
+              <header class="container__header">Operations average stats
+                <span class="icon icon-chart2"></span>
+              </header>
               
               <div class="container__body">
                 <p>Average statistics of all takeProfit, stopLoss and breakEven trades. Based on the results obtained from all completed operations</p>
@@ -330,7 +357,9 @@
           <!-- chart operations directional avg stats -->
           <div class="lyChartContainer display--f display--n" data-chartcontainer="directionalAvgStats">
             <div class="container">
-              <header class="container__header">Directional average stats</header>
+              <header class="container__header">Directional average stats
+                <span class="icon icon-chart2"></span>
+              </header>
               <p>Average statistics of directional trades. Based on the results obtained from all completed operations</p>
     
               <div class="container__body">
@@ -361,7 +390,9 @@
           <!-- chart Direction stats -->
           <div class="lyChartContainer display--f display--n" data-chartcontainer="directionalStats">
             <div class="container" >
-              <header class="container__header">Directional detailed stats</header>
+              <header class="container__header">Directional detailed stats
+                <span class="icon icon-chart2"></span>
+              </header>
 
               <div class="container__body">
                 <p>Detailed statistics of each directional trade ("long" and "short"). Based on the results obtained from all completed operations</p>
@@ -406,7 +437,8 @@
             </div>
           </div>
 
-          <button class="btn btn--dark btn--chart btn--chartMenu">Back to menu</button>
+          <button class="btn btn--dark btn--chart btn--chartMenu">
+            <span class="icon icon-menu"></span>Back to menu</button>
         </div>
       </div>
     </section>
@@ -416,7 +448,9 @@
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Manage your data and customize the site theme</h2>
-        <h3 class="section__subTitle">Settings</h3>
+        <h3 class="section__subTitle">Settings
+          <span class="icon icon-config"></span>
+        </h3>
         <p>Import and export your trading order history data and customize the site theme with the custom values that you  prefer</p>
       </div>
 
@@ -428,12 +462,15 @@
             <div class="containerButtons">
               <button class="btn btn--dark btn--theme" data-mode="custom">
                 Custom mode
+                <span class="icon icon-colors"></span>
               </button>
               <button class="btn btn--dark btn--theme" data-mode="1">
                 Dark mode
+                <span class="icon icon-moon"></span>
               </button>
               <button class="btn btn--dark btn--theme" data-mode="2">
                 Light mode
+                <span class="icon icon-sun"></span>
               </button>
             </div>
 
@@ -465,8 +502,12 @@
                   </div>
                 </div>
                 <footer class="subContainer__footer">
-                  <button class="btn btn--dark btn--theme" data-mode="temp">Test colors</button>
-                  <button class="btn btn--dark btn--theme" data-mode="0">Apply</button>
+                  <button class="btn btn--dark btn--theme" data-mode="temp">Test colors
+                    <span class="icon icon-colors"></span>
+                  </button>
+                  <button class="btn btn--dark btn--theme" data-mode="0">Apply
+                    <span class="icon icon-colors"></span>
+                  </button>
                 </foot>
               </div>
             </div>
@@ -479,7 +520,9 @@
           <div class="container__body">
             <!-- Import -->
             <div class="subContainer">
-              <div class="subContainer__header">Import data</div>
+              <header class="subContainer__header">Import data
+                <span class="icon icon-upload"></span>
+              </header>
 
               <div class="subContainer__body">
                 <p class="text--ib">
@@ -492,7 +535,9 @@
 
               <footer class="subContainer__footer">
                 <input type="file" id="excelFile" class="display--n excelInput">
-                <label for="excelFile" class="btn btn--dark excelInput__label">Select File</label>
+                <label for="excelFile" class="btn btn--dark excelInput__label">Select File
+                  <span class="icon icon-upload"></span>
+                </label>
                 
                 <select name="dataFormat" class="dataFormat btn btn--dark">
                   <option value ="none">Select Format</option>
@@ -504,7 +549,9 @@
 
             <!-- Export -->
             <div class="subContainer">
-              <div class="subContainer__header">Export data</div>
+              <header class="subContainer__header">Export data
+                <span class="icon icon-download"></span>
+              </header>
 
               <div class="subContainer__body">
                 <p>Generate a backup file with the data that you want to save.</p>
@@ -513,7 +560,9 @@
               </div>
 
               <footer class="subContainer__footer">
-                <button class="btn btn--dark btn--exportData">Export data</button>
+                <button class="btn btn--dark btn--exportData">Export data
+                  <span class="icon icon-download"></span>
+                </button>
                 <select name="dataFormat" class="dataExport btn btn--dark">
                   <option value ="none">Select data</option>
                   <option value ="theme">Theme mode</option>
@@ -526,7 +575,9 @@
         
         <!-- Delete data -->
         <div class="container">
-          <div class="subContainer__header">Delete data</div>
+          <header class="subContainer__header">Delete data
+            <span class="icon icon-remove"></span>
+          </header>
         
           <div class="subContainer__body">
             <p><b>ATTENTION!</b>, permanent and irreversible action.</p>
@@ -535,7 +586,9 @@
           </div>
         
           <footer class="subContainer__footer">
-            <button class="btn btn--dark btn--deleteData">Delete data</button>
+            <button class="btn btn--dark btn--deleteData">Delete data
+              <span class="icon icon-remove"></span>
+            </button>
           </footer>
         </div>
       </div>
@@ -546,7 +599,9 @@
     <section class="section display--f display--n">
       <div class="section__ly section__ly1">
         <h2 class="section__title">Learn more about the Trading OHSG website</h2>
-        <h3 class="section__subTitle">About</h3>
+        <h3 class="section__subTitle">About
+          <span class="icon icon-info"></span>
+        </h3>
         <p>
           Get more information about the Trading OHSG website, bring us your feedback of the site and also know the different ways to support us
         </p>

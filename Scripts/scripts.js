@@ -112,6 +112,8 @@
       ToggleSection(i+1);
     }
   }
+
+  document.querySelector(".logo").onclick=()=>{if(currentSection!=0) ToggleSection(0)}
 }
 
 

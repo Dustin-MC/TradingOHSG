@@ -147,6 +147,7 @@ p{
   height: 100%;
   text-decoration: none;
   color: var(--mainColor);
+  cursor: pointer;
 }
 .logo__icon{
   max-height: 100%;
@@ -156,6 +157,11 @@ p{
   margin: 0;
   font-size: 1.75rem;
   white-space: nowrap;
+}
+
+.icon{
+  display: inline-flex;
+  padding: 0 .2em;
 }
 
 .btn{
