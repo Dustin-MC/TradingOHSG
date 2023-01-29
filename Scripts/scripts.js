@@ -358,9 +358,9 @@
             fileData[i][5], // 1 leverage
             fileData[i][4], // 2 margin
             fileData[i][8], // 3 direction
-            RoundNumber(fileData[i][16]), // 4 realized PnL
-            ConvertDate(fileData[i][13]), // 5
-            fileData[i][14], // 6 fudingFee
+            RoundNumber(fileData[i][17]), // 4 realized PnL
+            ConvertDate(fileData[i][14]), // 5
+            fileData[i][15], // 6 fundingFee
           ]
 
           if(fileOp[3]=="long") fileOp[3]= true
@@ -440,7 +440,6 @@
 
   function ConvertDate(timeString, isToUTC0=true){
     let finalDate
-    timeString= timeString.toJSON()
     
     if(isToUTC0){
       let year= timeString.slice(0, 4),
@@ -458,7 +457,13 @@
     else{
       /* TODO
       else dont used */
-      finalDate= (new Date(timeString)).toJSON()
+      let year= timeString.slice(0, 4),
+      month= Number(timeString.slice(5, 7)),
+      day= timeString.slice(8, 10),
+      hour= timeString.slice(11, 13),
+      minute= timeString.slice(14, 16)
+
+      finalDate= (new Date(Date.UTC(year, month-1, day, hour, minute))).toJSON();
     }
     
     finalDate= finalDate.slice(0, -5).replace("T", " ")
@@ -1059,7 +1064,7 @@
     orderHistory.forEach((op,i)=>{
       let /* opBtn= document.createElement("button"), */
       tRow= document.createElement("tr"),
-      opDate= new Date(op[5]),
+      opDate= new Date(op[5]+"z"),
 
       tRowData= [
         `${opDate.getFullYear()} `, /* closeDate */
@@ -1072,6 +1077,7 @@
       if(opDate.getMonth()+1 >9)
         tRowData[0]+= `${opDate.getMonth()+1}`
       else tRowData[0]+= `0${opDate.getMonth()+1}`
+      
       if(opDate.getDate() >9)
         tRowData[0]+=`.${opDate.getDate()}`
       else tRowData[0]+= `.0${opDate.getDate()}`
